@@ -1,0 +1,22 @@
+{
+    "name": "andino-rs dev",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "remoteUser": "dev",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "rust-lang.rust-analyzer",
+                "bierner.github-markdown-preview",
+                "bierner.markdown-preview-github-styles",
+                "github.vscode-github-actions",
+                "pbkit.vscode-pbkit",
+                "streetsidesoftware.code-spell-checker",
+                "yzhang.markdown-all-in-one",
+                "tamasfe.even-better-toml",
+            ]
+        }
+    }
+}
