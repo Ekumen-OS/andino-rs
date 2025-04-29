@@ -16,19 +16,6 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build_and_test:
-    name: Build & Test
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        toolchain:
-          - 1.86.0
-    steps:
-      - uses: actions/checkout@v4
-      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
-      - run: cargo build --workspace --all-targets
-      - run: cargo test --workspace --all-targets
-
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -49,3 +36,17 @@ jobs:
         ## See https://github.com/actions/checkout/issues/363
         run: git config --global --add safe.directory $(realpath .)
       - run: pre-commit run --all-files --verbose --show-diff-on-failure
+
+  build_and_test:
+    name: Build & Test
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain:
+          - 1.86.0
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+      - run: cargo build --workspace --all-targets
+      - run: cargo test --workspace --all-targets
