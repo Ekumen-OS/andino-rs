@@ -1,0 +1,17 @@
+[package]
+name = "andino"
+description = "Crate for Andino, a Rust library for working with the Andino robotics platform."
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+
+[dependencies]
+serialport = { workspace = true }
+thiserror = { workspace = true }
+log = { workspace = true }
+
+[dev-dependencies]
+clap = { workspace = true, features = ["derive"] }
+log = { workspace = true }
+env_logger = { workspace = true }

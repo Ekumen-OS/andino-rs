@@ -28,6 +28,8 @@ RUN useradd -o --uid 1000 -s "/bin/bash" -m ${USERNAME} && \
     echo "${USERNAME} ALL=NOPASSWD: ALL" > /etc/sudoers.d/${USERNAME} && \
     chmod 0440 /etc/sudoers.d/${USERNAME}
 
+RUN usermod -a -G dialout $USERNAME
+
 COPY rust-dev/dev.bashrc /home/${USERNAME}/.bashrc.d/dev.bashrc
 RUN echo "source /home/${USERNAME}/.bashrc.d/dev.bashrc" >> /home/${USERNAME}/.bashrc
 
@@ -68,6 +70,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # python
     python3-dev \
     python3-pip \
+    # linux
+    libudev-dev \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
