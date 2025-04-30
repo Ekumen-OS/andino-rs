@@ -1,0 +1,9 @@
+[package]
+name = "andino-core"
+description = "Core library for Andino. It provides communication with underlying hardware and provides a set of abstractions to work with it."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]

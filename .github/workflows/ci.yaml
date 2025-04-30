@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+# Cancel previously running PR jobs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain:
+          - 1.86.0
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+      - name: Install pre-commit
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install pre-commit
+      - name: Install pre-commit hooks
+        run: pre-commit install
+      - name: Indicate safe directory
+        ## See https://github.com/actions/checkout/issues/363
+        run: git config --global --add safe.directory $(realpath .)
+      - run: pre-commit run --all-files --verbose --show-diff-on-failure
+
+  build_and_test:
+    name: Build & Test
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain:
+          - 1.86.0
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+      - run: cargo build --workspace --all-targets
+      - run: cargo test --workspace --all-targets

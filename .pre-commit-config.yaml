@@ -1,0 +1,42 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+-   repo: local
+    hooks:
+      - id: fmt
+        name: fmt
+        description: Format files with cargo fmt.
+        entry: cargo fmt
+        language: system
+        types: [rust]
+        args: ["--all", "--", "--check"]
+      - id: cargo-check
+        name: cargo check
+        description: Check the package for errors.
+        entry: cargo check
+        args: ["--workspace", "--all-targets"]
+        language: system
+        types: [rust]
+        pass_filenames: false
+      - id: clippy
+        name: clippy
+        description: Lint rust sources
+        entry: cargo clippy
+        language: system
+        args: ["--workspace", "--all-targets", "--", "-D", "warnings"]
+        types: [rust]
+        pass_filenames: false
+      - id: docs
+        name: docs
+        description: Build documentation
+        entry: cargo
+        args: ["doc", "--all-features", "--no-deps"]
+        language: system
+        types: [rust]
+        pass_filenames: false
