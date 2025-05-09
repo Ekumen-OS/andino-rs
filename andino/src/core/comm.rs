@@ -68,8 +68,8 @@ impl HwSerialConnection {
     /// * `Ok(HwSerialConnection)` - A new instance of `HwSerialConnection`.
     /// * `Err(HwSerialConnectionError)` - An error if the connection fails.
     ///
-    pub fn new(serial_device: String, baud_rate: u32, timeout: u64) -> Result<Self, HwSerialConnectionError> {
-        let serial_port = serialport::new(&serial_device, baud_rate)
+    pub fn new(serial_device: impl AsRef<str>, baud_rate: u32, timeout: u64) -> Result<Self, HwSerialConnectionError> {
+        let serial_port = serialport::new(serial_device.as_ref(), baud_rate)
             // Set the serial port parameters
             .parity(serialport::Parity::None)
             .stop_bits(serialport::StopBits::One)
@@ -79,7 +79,7 @@ impl HwSerialConnection {
             // Open the serial port
             .open()
             .map_err(|e| HwSerialConnectionError::SerialPortConnectionError { error: e.to_string() })?;
-        log::trace!("Serial port opened: {}", serial_device);
+        log::trace!("Serial port opened: {}", serial_device.as_ref());
         Ok(HwSerialConnection { serial_port })
     }
 

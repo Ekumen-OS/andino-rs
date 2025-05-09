@@ -75,9 +75,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     println!("SetMotorValues command requires two arguments.");
                     continue;
                 }
+                let left = input_args[1].parse::<i32>();
+                if left.is_err() {
+                    println!("Invalid value for left motor: {}", input_args[1]);
+                    continue;
+                }
+                let right = input_args[2].parse::<i32>();
+                if right.is_err() {
+                    println!("Invalid value for right motor: {}", input_args[2]);
+                    continue;
+                }
                 andino::core::comm::SerialCommands::SetMotorValues {
-                    left: input_args[1].parse::<i32>().unwrap_or(0),
-                    right: input_args[2].parse::<i32>().unwrap_or(0),
+                    left: left.unwrap(),
+                    right: right.unwrap(),
                 }
             }
             "SetPIDValues" => {
@@ -85,11 +95,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     println!("SetPIDValues command requires four arguments.");
                     continue;
                 }
+                let kp = input_args[1].parse::<f32>();
+                if kp.is_err() {
+                    println!("Invalid value for kp: {}", input_args[1]);
+                    continue;
+                }
+                let ki = input_args[2].parse::<f32>();
+                if ki.is_err() {
+                    println!("Invalid value for ki: {}", input_args[2]);
+                    continue;
+                }
+                let kd = input_args[3].parse::<f32>();
+                if kd.is_err() {
+                    println!("Invalid value for kd: {}", input_args[3]);
+                    continue;
+                }
+                let ko = input_args[4].parse::<f32>();
+                if ko.is_err() {
+                    println!("Invalid value for ko: {}", input_args[4]);
+                    continue;
+                }
                 andino::core::comm::SerialCommands::SetPIDValues {
-                    kp: input_args[1].parse::<f32>().unwrap_or(0.0),
-                    ki: input_args[2].parse::<f32>().unwrap_or(0.0),
-                    kd: input_args[3].parse::<f32>().unwrap_or(0.0),
-                    ko: input_args[4].parse::<f32>().unwrap_or(0.0),
+                    kp: kp.unwrap(),
+                    ki: ki.unwrap(),
+                    kd: kd.unwrap(),
+                    ko: ko.unwrap(),
                 }
             }
             _ => {
