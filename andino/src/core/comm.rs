@@ -100,11 +100,10 @@ impl HwSerialConnection {
         // Send the command to the serial port
         self.serial_port.write_all(command_str.as_bytes())?;
 
-        // Read the response from the serial port
-        let mut response = vec![0; 1024];
+        let mut response_buffer = vec![0; 32];
         log::trace!("Reading response from serial port");
-        let n = self.serial_port.read(&mut response)?;
-        let response_str = String::from_utf8_lossy(&response[..n]).to_string();
+        let n = self.serial_port.read(&mut response_buffer)?;
+        let response_str = String::from_utf8_lossy(&response_buffer[..n]).to_string();
         log::trace!("Received response: {}", response_str);
         HwSerialConnection::parse_response(&command, response_str)
     }
