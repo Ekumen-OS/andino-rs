@@ -39,6 +39,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut serial_connection =
         andino::core::comm::HwSerialConnection::new(args.serial_device, args.baud_rate, args.timeout)?;
 
+    // TODO(francocipollone): Add a method to check if the serial connection is open and ready.
     log::info!("Waits 3 seconds for the serial connection to be established");
     std::thread::sleep(std::time::Duration::from_secs(3));
 
