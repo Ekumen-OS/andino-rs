@@ -9,7 +9,7 @@
 use thiserror::Error;
 
 /// Error type for the serial connection.
-#[derive(Debug, Error)]
+#[derive(Debug, Error, PartialEq)]
 pub enum HwSerialConnectionError {
     #[error("Serial port connection error: {error}")]
     /// File system error.
@@ -151,18 +151,23 @@ impl HwSerialConnection {
                 error: "Empty response from serial port".to_string(),
             });
         }
+        use itertools::Itertools;
         match command {
             SerialCommands::ReadEncoderValues => {
-                let values: Vec<&str> = response.split_whitespace().collect();
-                if values.len() != 2 {
+                let splitted_response: Option<(&str, &str)> = response.split_whitespace().collect_tuple();
+                let values = if let Some(values) = splitted_response {
+                    values
+                } else {
                     return Err(HwSerialConnectionError::WrongResponseError {
                         error: "Invalid response format for encoder values".to_string(),
                     });
-                }
-                let left = values[0]
+                };
+                let left = values
+                    .0
                     .parse::<i64>()
                     .map_err(|e| HwSerialConnectionError::WrongResponseError { error: e.to_string() })?;
-                let right = values[1]
+                let right = values
+                    .1
                     .parse::<i64>()
                     .map_err(|e| HwSerialConnectionError::WrongResponseError { error: e.to_string() })?;
                 Ok(SerialResponse::EncoderValues { left, right })
@@ -175,6 +180,7 @@ impl HwSerialConnection {
 #[cfg(test)]
 mod tests {
     use super::HwSerialConnection;
+    use super::HwSerialConnectionError;
     use super::SerialCommands;
     use super::SerialResponse;
 
@@ -216,6 +222,19 @@ mod tests {
             }
             _ => panic!("Expected EncoderValues response"),
         }
+    }
+    #[test]
+    fn test_parse_response_encoders_error() {
+        let response = "123 456 789".to_string();
+        let command = SerialCommands::ReadEncoderValues;
+        let parsed_response = HwSerialConnection::parse_response(&command, response);
+        assert!(parsed_response.is_err());
+        assert_eq!(
+            parsed_response.unwrap_err(),
+            HwSerialConnectionError::WrongResponseError {
+                error: "Invalid response format for encoder values".to_string()
+            }
+        );
     }
     #[test]
     fn test_parse_response_other() {

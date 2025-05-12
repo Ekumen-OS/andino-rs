@@ -10,7 +10,8 @@ repository = "https://github.com/ekumenlabs/andino-rs"
 
 [workspace.dependencies]
 clap = { version = "4.5" }
+env_logger = { version = "0.10" }
+itertools = { version = "0.14" }
+log = { version = "0.4" }
 serialport = { version = "4.7"}
 thiserror = { version = "1.0" }
-log = { version = "0.4" }
-env_logger = { version = "0.10" }

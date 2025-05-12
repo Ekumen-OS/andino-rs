@@ -7,11 +7,12 @@ license = { workspace = true }
 repository = { workspace = true }
 
 [dependencies]
+itertools = { workspace = true }
+log = { workspace = true }
 serialport = { workspace = true }
 thiserror = { workspace = true }
-log = { workspace = true }
 
 [dev-dependencies]
 clap = { workspace = true, features = ["derive"] }
-log = { workspace = true }
 env_logger = { workspace = true }
+log = { workspace = true }
