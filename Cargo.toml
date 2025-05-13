@@ -1,9 +1,17 @@
 [workspace]
 resolver = "2"
-members = ["andino-core", "andino-dora"]
+members = ["andino", "andino-dora"]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0" # TODO(francocipollone): TBD
 repository = "https://github.com/ekumenlabs/andino-rs"
+
+[workspace.dependencies]
+clap = { version = "4.5" }
+env_logger = { version = "0.10" }
+itertools = { version = "0.14" }
+log = { version = "0.4" }
+serialport = { version = "4.7"}
+thiserror = { version = "1.0" }

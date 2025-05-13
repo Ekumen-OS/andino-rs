@@ -4,6 +4,7 @@
         "dockerfile": "Dockerfile",
         "context": ".."
     },
+    "mounts": ["type=bind,source=/dev,target=/dev"],
     "remoteUser": "dev",
     "customizations": {
         "vscode": {
@@ -16,7 +17,11 @@
                 "streetsidesoftware.code-spell-checker",
                 "yzhang.markdown-all-in-one",
                 "tamasfe.even-better-toml",
+                "ritwickdey.liveserver"
             ]
         }
-    }
+    },
+    "runArgs": [
+        "--privileged" // Required for /dev access
+    ]
 }
