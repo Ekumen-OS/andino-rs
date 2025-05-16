@@ -33,7 +33,7 @@ pub enum SerialCommands {
     /// Command to read encoder values.
     ReadEncoderValues,
     /// Command to set motor values. (encoder ticks per second)
-    SetMotorValues { left: i32, right: i32 },
+    SetMotorValues { left: i64, right: i64 },
     /// Command to modify PID values of the motor controller.
     SetPIDValues { kp: f32, ki: f32, kd: f32, ko: f32 },
 }
@@ -50,6 +50,7 @@ pub enum SerialResponse {
 /// Abstracts the serial connection to the underlying hardware.
 /// This struct is used to send commands to the hardware and receive responses.
 /// It uses the `serialport` crate to handle the serial communication.
+#[derive(Debug)]
 pub struct HwSerialConnection {
     serial_port: Box<dyn serialport::SerialPort>,
 }
@@ -158,7 +159,7 @@ impl HwSerialConnection {
                     values
                 } else {
                     return Err(HwSerialConnectionError::WrongResponseError {
-                        error: "Invalid response format for encoder values".to_string(),
+                        error: "Invalid response format for encoder values: ".to_string() + response.as_str(),
                     });
                 };
                 let left = values
@@ -226,12 +227,12 @@ mod tests {
     fn test_parse_response_encoders_error() {
         let response = "123 456 789".to_string();
         let command = SerialCommands::ReadEncoderValues;
-        let parsed_response = HwSerialConnection::parse_response(&command, response);
+        let parsed_response = HwSerialConnection::parse_response(&command, response.clone());
         assert!(parsed_response.is_err());
         assert_eq!(
             parsed_response.unwrap_err(),
             HwSerialConnectionError::WrongResponseError {
-                error: "Invalid response format for encoder values".to_string()
+                error: "Invalid response format for encoder values: ".to_string() + response.as_str()
             }
         );
     }

@@ -76,12 +76,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     println!("SetMotorValues command requires two arguments.");
                     continue;
                 }
-                let left = input_args[1].parse::<i32>();
+                let left = input_args[1].parse::<i64>();
                 if left.is_err() {
                     println!("Invalid value for left motor: {}", input_args[1]);
                     continue;
                 }
-                let right = input_args[2].parse::<i32>();
+                let right = input_args[2].parse::<i64>();
                 if right.is_err() {
                     println!("Invalid value for right motor: {}", input_args[2]);
                     continue;
