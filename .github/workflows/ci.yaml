@@ -19,10 +19,6 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        toolchain:
-          - 1.86.0
     steps:
       - uses: actions/checkout@v4
       - name: Install prerequisites
@@ -30,7 +26,6 @@ jobs:
         with:
           packages: libudev-dev
           version: 1.0
-      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
       - name: Install pre-commit
         run: |
           python3 -m pip install --upgrade pip
@@ -48,10 +43,6 @@ jobs:
     name: Build & Test
     needs: lint
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        toolchain:
-          - 1.86.0
     steps:
       - uses: actions/checkout@v4
       - name: Install prerequisites
@@ -59,7 +50,6 @@ jobs:
         with:
           packages: libudev-dev
           version: 1.0
-      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
       - name: Rust cache
         uses: Swatinem/rust-cache@v2
       - name: Cargo build

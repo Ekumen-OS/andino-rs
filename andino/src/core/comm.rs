@@ -4,7 +4,7 @@
 //
 //! Module for communication with the underlying hardware via serial port.
 //! For further details regarding the hardware take a look at the
-//! firmware code at https://github.com/Ekumen-OS/andino/tree/humble/andino_firmware
+//! firmware code at <https://github.com/Ekumen-OS/andino/tree/humble/andino_firmware>
 
 use thiserror::Error;
 
