@@ -65,7 +65,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::thread::sleep(std::time::Duration::from_secs(3));
 
     // Create a separate thread for getting the commands from the user
-    let command = Arc::new(Mutex::new(String::new()));
+    let command = Arc::new(Mutex::new(KeyCode::Char(' ')));
     let command_clone = Arc::clone(&command);
     // Thread to read user input
     thread::spawn(move || {
@@ -73,29 +73,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             if event::poll(Duration::from_millis(300)).unwrap() {
                 if let Event::Key(key_event) = event::read().unwrap() {
                     let mut cmd = command_clone.lock().unwrap();
-                    match key_event.code {
-                        KeyCode::Char('w') => *cmd = "w".to_string(),
-                        KeyCode::Char('s') => *cmd = "s".to_string(),
-                        KeyCode::Char('x') => *cmd = "x".to_string(),
-                        KeyCode::Char('c') => *cmd = "c".to_string(),
-                        KeyCode::Char('q') => {
-                            *cmd = "q".to_string();
-                            break;
-                        }
-                        KeyCode::Esc => {
-                            *cmd = "q".to_string();
-                            break;
-                        }
-                        KeyCode::Char(' ') => {
-                            *cmd = "stop".to_string();
-                        }
-                        _ => *cmd = "stop".to_string(), // treat anything else as "nothing"
-                    }
+                    *cmd = key_event.code;
                 }
             } else {
                 // If no event is detected, set the command to "stop"
                 let mut cmd = command_clone.lock().unwrap();
-                *cmd = "stop".to_string();
+                *cmd = KeyCode::Char(' ');
             }
         }
     });
@@ -103,7 +86,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Define a rate for the loop
     let rate = 10.0; // Hz
     let mut last_time = std::time::Instant::now();
-    let mut last_cmd = String::from("stop");
+    let mut last_cmd = KeyCode::Char(' ');
     let mut forward_speed = args.default_forward_speed;
     loop {
         let start_time = std::time::Instant::now();
@@ -112,43 +95,42 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         last_time = std::time::Instant::now();
         let _hal_state = hal.poll_state(delta_time)?;
 
-        let cmd = command.lock().unwrap();
-        let current_cmd = cmd.to_string();
+        let cmd = *command.lock().unwrap();
 
-        match current_cmd.as_str() {
-            "q" => {
-                if last_cmd != "q" {
+        match cmd {
+            KeyCode::Char('q') => {
+                if last_cmd != KeyCode::Char('q') {
                     println!("\r* Exiting the program by the user");
                 }
                 hal.set_motor_speed(0.0, 0.0)?;
                 break;
             }
-            "w" => {
-                if last_cmd != "w" {
+            KeyCode::Char('w') => {
+                if last_cmd != KeyCode::Char('w') {
                     println!("\r* Command: Move forward");
                 }
                 hal.set_motor_speed(forward_speed, forward_speed)?
             }
-            "s" => {
-                if last_cmd != "s" {
+            KeyCode::Char('s') => {
+                if last_cmd != KeyCode::Char('s') {
                     println!("\r* Command: Move backward");
                 }
                 hal.set_motor_speed(-forward_speed, -forward_speed)?;
             }
-            "c" => {
-                if last_cmd != "c" {
+            KeyCode::Char('c') => {
+                if last_cmd != KeyCode::Char('c') {
                     println!("\r* Increase forward speed to: {}", forward_speed);
                 }
                 forward_speed += 0.1;
             }
-            "x" => {
-                if last_cmd != "x" {
+            KeyCode::Char('x') => {
+                if last_cmd != KeyCode::Char('x') {
                     println!("\r* Decrease forward speed to: {}", forward_speed);
                 }
                 forward_speed -= 0.1;
             }
-            "stop" => {
-                if last_cmd != "stop" {
+            KeyCode::Char(' ') => {
+                if last_cmd != KeyCode::Char(' ') {
                     println!("\r* Command: Stop");
                 }
                 hal.set_motor_speed(0.0, 0.0)?;
@@ -164,9 +146,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         if sleep_time > 0.0 {
             std::thread::sleep(std::time::Duration::from_secs_f64(sleep_time));
         }
-        last_cmd = current_cmd;
+        last_cmd = cmd;
     }
-
+    terminal::disable_raw_mode()?;
     println!("\r* Exiting the program");
     Ok(())
 }
