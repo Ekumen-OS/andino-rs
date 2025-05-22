@@ -1,0 +1,12 @@
+[package]
+name = "dora_diff_drive_controller"
+description = "Differential drive controller for Dora"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+
+eyre = { workspace = true }
+dora-node-api = { workspace = true}

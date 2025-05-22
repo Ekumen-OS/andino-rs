@@ -1,0 +1,13 @@
+[package]
+name = "dora_andino_hal"
+description = "Hardware Abstraction Layer for Andino"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+andino = { path = "../../andino" }
+
+eyre = { workspace = true }
+dora-node-api = { workspace = true}
