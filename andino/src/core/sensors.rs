@@ -18,7 +18,7 @@ pub struct Wheel {
 #[derive(Clone, Debug)]
 pub struct WheelState {
     /// The current speed of the wheel in rads per second.
-    pub angular_velocity: f64,
+    pub velocity: f64,
     /// The current position of the wheel in rads.
     pub position: f64,
 }
@@ -33,7 +33,7 @@ impl Wheel {
             ticks_per_revolution,
             last_ticks_count: 0,
             state: WheelState {
-                angular_velocity: 0.0,
+                velocity: 0.0,
                 position: 0.0,
             },
         }
@@ -55,7 +55,7 @@ impl Wheel {
     /// Consider using a timer or a loop to call this method at regular intervals as
     /// there are calculations that depend on the time elapsed since the last update.
     pub fn update(&mut self, ticks: i64, delta_time: f64) -> &WheelState {
-        self.update_angular_velocity(ticks, delta_time);
+        self.update_velocity(ticks, delta_time);
         self.update_position(ticks);
         &self.state
     }
@@ -66,9 +66,9 @@ impl Wheel {
     }
 
     // Update the angular velocity of the wheel based on the ticks count and delta time.
-    fn update_angular_velocity(&mut self, ticks: i64, delta_time: f64) {
+    fn update_velocity(&mut self, ticks: i64, delta_time: f64) {
         let delta_ticks = ticks - self.last_ticks_count;
-        self.state.angular_velocity =
+        self.state.velocity =
             (delta_ticks as f64 / self.ticks_per_revolution as f64) * (2.0 * std::f64::consts::PI / delta_time);
         self.last_ticks_count = ticks;
     }
@@ -84,15 +84,15 @@ mod tests {
         // Initial ticks count is 0.
         let state = wheel.update(500, 1.0);
         assert_eq!(state.position, std::f64::consts::PI);
-        assert_eq!(state.angular_velocity, std::f64::consts::PI);
+        assert_eq!(state.velocity, std::f64::consts::PI);
 
         let state = wheel.update(1000, 1.0);
         assert_eq!(state.position, 2. * std::f64::consts::PI);
-        assert_eq!(state.angular_velocity, std::f64::consts::PI);
+        assert_eq!(state.velocity, std::f64::consts::PI);
 
         let state = wheel.update(500, 1.0);
         assert_eq!(state.position, std::f64::consts::PI);
-        assert_eq!(state.angular_velocity, -std::f64::consts::PI);
+        assert_eq!(state.velocity, -std::f64::consts::PI);
     }
 
     #[test]
