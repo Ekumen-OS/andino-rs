@@ -41,7 +41,6 @@ struct Args {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
-    terminal::enable_raw_mode()?;
     let args = Args::parse();
 
     println!("\rHal Interface Example:");
@@ -64,6 +63,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     log::info!("Waits 3 seconds for the serial connection to be established");
     std::thread::sleep(std::time::Duration::from_secs(3));
 
+    terminal::enable_raw_mode()?;
     // Create a separate thread for getting the commands from the user
     let command = Arc::new(Mutex::new(KeyCode::Char(' ')));
     let command_clone = Arc::clone(&command);
@@ -90,9 +90,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut forward_speed = args.default_forward_speed;
     loop {
         let start_time = std::time::Instant::now();
+        let delta_time = (start_time - last_time).as_secs_f64();
+        last_time = start_time;
 
-        let delta_time = (std::time::Instant::now() - last_time).as_secs_f64();
-        last_time = std::time::Instant::now();
         let _hal_state = hal.poll_state(delta_time)?;
 
         let cmd = *command.lock().unwrap();
