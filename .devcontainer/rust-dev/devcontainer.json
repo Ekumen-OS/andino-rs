@@ -4,7 +4,13 @@
         "dockerfile": "Dockerfile",
         "context": ".."
     },
-    "mounts": ["type=bind,source=/dev,target=/dev"],
+    "containerEnv": {
+      "DISPLAY": "${localEnv:DISPLAY}"
+    },
+    "mounts": [
+      "type=bind,source=/dev,target=/dev",
+      "type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix"
+    ],
     "remoteUser": "dev",
     "customizations": {
         "vscode": {
@@ -21,7 +27,12 @@
             ]
         }
     },
+    // TODO(francocipollone): Create another devcontainer profile for non-GPU-enabled development
     "runArgs": [
-        "--privileged" // Required for /dev access
+        "--privileged", // Required for /dev access
+        "--network=host",
+        "--runtime=nvidia", // Use NVIDIA runtime for GPU access
+        "--gpus=all", // Use all available GPUs
+        "--name=andino-rs"
     ]
 }

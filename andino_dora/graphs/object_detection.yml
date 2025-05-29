@@ -1,0 +1,38 @@
+nodes:
+  - id: camera
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=opencv-video-capture&subdirectory=node-hub/opencv-video-capture
+    path: opencv-video-capture
+    inputs:
+      tick: dora/timer/millis/100
+    outputs:
+      - image
+    env:
+      CAPTURE_PATH: /dev/video0
+      IMAGE_WIDTH: 640
+      IMAGE_HEIGHT: 480
+
+  - id: object-detection
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-yolo&subdirectory=node-hub/dora-yolo
+    path: dora-yolo
+    inputs:
+      image: camera/image
+    outputs:
+      - bbox
+
+  - id: rerun-viz
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-rerun&subdirectory=node-hub/dora-rerun
+    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-rerun
+    path: dora-rerun
+    inputs:
+      image: camera/image
+      boxes2d: object-detection/bbox
+    env:
+      # Connects and sends the logged data to a remote Rerun viewer
+      # You can set it to 'SPAWN' if you want to run the viewer locally, however
+      # the SBC (in this case the Raspberry Pi) needs to b able to support
+      # the Rerun viewer GUI (GPU support).
+      OPERATING_MODE: CONNECT
+      # Replace with your Rerun server address
+      # Run the rerun server viewer with:
+      #  rerun --serve --web-viewer --bind 192.168.1.107
+      RERUN_SERVER_ADDR: 192.168.1.107:9876
