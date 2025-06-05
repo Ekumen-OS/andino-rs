@@ -147,6 +147,20 @@ RUN git clone --depth 1 --branch v0.3.11 --single-branch https://github.com/dora
     pip install /home/${USERNAME}/.dora/dora/node-hub/opencv-video-capture
 
 ################################################################################
+# Python dev install
+################################################################################
+
+# Install uv package manager: https://github.com/astral-sh/uv
+RUN pip install uv
+
+################################################################################
+# MuJoCo installation
+################################################################################
+
+ENV MUJOCO_VERSION=3.2.6
+RUN pip install mujoco==${MUJOCO_VERSION}
+
+################################################################################
 # NVIDIA
 ################################################################################
 

@@ -1,0 +1,46 @@
+nodes:
+  # Loads andino simulation in MuJoCo. This replaces the andino HAL with a simulated version.
+  # If we were to replace this node with dora_andino_hal node, it should be able to run the dataflow.
+  - id: dora_andino_mujoco_sim
+    build: pip install -e ../dora_node_hub/dora_andino_mujoco_sim
+    path: dora_andino_mujoco_sim
+    inputs:
+      # This should be paired with time-step of the simulation which is typically 1ms to guarantee real-time performance.
+      # Be aware that there is no sim time being used in the rest of the graph.
+      tick: dora/timer/millis/1
+      joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
+    outputs:
+      - wheel_joint_positions # [left, right]
+      - wheel_joint_velocities # [left, right]
+
+  # Differential drive controller node.
+  # This node takes the input command velocity (cmd_vel) [linear and angular velocity] and converts it to joint speed commands [rad/s] for the left and right wheels.
+  - id: dora_diff_drive_controller
+    build: cargo build -p dora_diff_drive_controller
+    path: ../../target/debug/dora_diff_drive_controller
+    inputs:
+      cmd_vel: dora_teleop_keyboard/cmd_vel
+    outputs:
+      - joints_speed_cmd # [left, right]
+    env:
+      WHEEL_RADIUS: 0.0315 # [m]
+      WHEEL_SEPARATION: 0.137 # [m]
+
+  # Node that reads the keyboard input and outputs the character pressed.
+  - id: dora_keyboard
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-keyboard&subdirectory=node-hub/dora-keyboard
+    path: dora-keyboard
+    outputs:
+      - char
+
+  # Convert the keyboard input to a command velocity (cmd_vel) to teleoperate a robot.
+  - id: dora_teleop_keyboard
+    build: cargo build -p dora_teleop_keyboard
+    path: ../../target/debug/dora_teleop_keyboard
+    inputs:
+      key: dora_keyboard/char
+    outputs:
+      - cmd_vel # [linear_vel, 0, 0, 0, 0, angular_vel]
+    env:
+      DEFAULT_LINEAR_SPEED: 0.3 # [m/s]
+      DEFAULT_ANGULAR_SPEED: 1.0 # [rad/s]

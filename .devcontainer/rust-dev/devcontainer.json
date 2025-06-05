@@ -23,7 +23,8 @@
                 "streetsidesoftware.code-spell-checker",
                 "yzhang.markdown-all-in-one",
                 "tamasfe.even-better-toml",
-                "ritwickdey.liveserver"
+                "ritwickdey.liveserver",
+                "ms-python.python"
             ]
         }
     },
