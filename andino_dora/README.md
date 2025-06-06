@@ -55,7 +55,7 @@ end
   camera -- image --> rerun-viz
 ```
 
-Build the dataflow
+Build the dataflow:
 ```
 dora build graphs/object_detection.yml
 ```
