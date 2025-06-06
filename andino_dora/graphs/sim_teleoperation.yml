@@ -2,7 +2,7 @@ nodes:
   # Loads andino simulation in MuJoCo. This replaces the andino HAL with a simulated version.
   # If we were to replace this node with dora_andino_hal node, it should be able to run the dataflow.
   - id: dora_andino_mujoco_sim
-    build: pip install -e ../dora_node_hub/dora_andino_mujoco_sim
+    build: pip install -e ../../dora_node_hub/dora_andino_mujoco_sim
     path: dora_andino_mujoco_sim
     inputs:
       # This should be paired with time-step of the simulation which is typically 1ms to guarantee real-time performance.

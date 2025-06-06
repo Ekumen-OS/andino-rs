@@ -40,34 +40,10 @@ cargo build
 
 What is dora? See https://dora-rs.ai/
 
-### Teleoperating the Andino robot
+### `andino_dora` package
 
-```mermaid
-        flowchart TB
-  dora_andino_hal["**dora_andino_hal**"]
-  dora_diff_drive_controller["**dora_diff_drive_controller**"]
-  dora_keyboard[\"**dora_keyboard**"/]
-  dora_teleop_keyboard["**dora_teleop_keyboard**"]
-subgraph ___dora___ [dora]
-  subgraph ___timer_timer___ [timer]
-    dora/timer/millis/100[\millis/100/]
-  end
-end
-  dora_diff_drive_controller -- joints_speed_cmd --> dora_andino_hal
-  dora/timer/millis/100 -- tick --> dora_andino_hal
-  dora_teleop_keyboard -- cmd_vel --> dora_diff_drive_controller
-  dora_keyboard -- char as key --> dora_teleop_keyboard
-```
-
-Build the `andino_dora`'s dataflow:
-```
-dora build andino_dora/graphs/dataflow.yml
-```
-
-Run the dataflow locally:
-```
-dora run andino_dora/graphs/dataflow.yml
-```
+[`andino_dora`](andino_dora) package provides serveral dora dataflows.
+Check [`andino_dora`'s README](andino_dora) for more information on how to run it.
 
 ### Appendix
 
