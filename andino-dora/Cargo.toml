@@ -1,9 +1,0 @@
-[package]
-name = "andino-dora"
-description = "Integration with Dora for Andino."
-version.workspace = true
-edition.workspace = true
-license.workspace = true
-repository.workspace = true
-
-[dependencies]

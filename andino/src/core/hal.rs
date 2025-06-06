@@ -13,6 +13,7 @@ pub enum HalError {
 }
 
 /// Configuration for the hardware abstraction layer (HAL).
+#[derive(Debug)]
 pub struct HalConfig {
     /// The serial device to connect to (e.g., "/dev/ttyUSB0").
     pub serial_device: String,

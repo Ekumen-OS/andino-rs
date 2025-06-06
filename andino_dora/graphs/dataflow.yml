@@ -1,0 +1,62 @@
+nodes:
+  # Node that loads the HAL for the Andino robot.
+  - id: dora_andino_hal
+    build: cargo build -p dora_andino_hal
+    path: ../../target/debug/dora_andino_hal
+    inputs:
+      tick: dora/timer/millis/100
+      joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
+    outputs:
+      - wheel_joint_positions # [left, right]
+      - wheel_joint_velocities # [left, right]
+    env:
+      # Serial port name.
+      SERIAL_DEVICE: /dev/ttyUSB0
+      # Baud rate for the serial port.
+      BAUD_RATE: 57600
+      # Number of encoder ticks per revolution for the motors.
+      MOTOR_TICKS_PER_REVOLUTION: 585
+      # Timeout for the serial port communication in milliseconds.
+      TIMEOUT: 3000
+
+  # Differential drive controller node.
+  # This node takes the input command velocity (cmd_vel) [linear and angular velocity] and converts it to joint speed commands [rad/s] for the left and right wheels.
+  - id: dora_diff_drive_controller
+    build: cargo build -p dora_diff_drive_controller
+    path: ../../target/debug/dora_diff_drive_controller
+    inputs:
+      cmd_vel: dora_teleop_keyboard/cmd_vel
+    outputs:
+      - joints_speed_cmd # [left, right]
+    env:
+      WHEEL_RADIUS: 0.0315 # [m]
+      WHEEL_SEPARATION: 0.137 # [m]
+
+  # Node that reads the keyboard input and outputs the character pressed.
+  - id: dora_keyboard
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-keyboard&subdirectory=node-hub/dora-keyboard
+    path: dora-keyboard
+    outputs:
+      - char
+
+  # Convert the keyboard input to a command velocity (cmd_vel) to teleoperate a robot.
+  - id: dora_teleop_keyboard
+    build: cargo build -p dora_teleop_keyboard
+    path: ../../target/debug/dora_teleop_keyboard
+    inputs:
+      key: dora_keyboard/char
+    outputs:
+      - cmd_vel # [linear_vel, 0, 0, 0, 0, angular_vel]
+    env:
+      DEFAULT_LINEAR_SPEED: 0.3 # [m/s]
+      DEFAULT_ANGULAR_SPEED: 1.0 # [rad/s]
+
+  # - id: dora-record
+  #   custom:
+  #     build: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-record
+  #     source: dora-record
+  #     inputs:
+  #       wheel_joint_positions: dora_andino_hal/wheel_joint_positions
+  #       wheel_joint_velocities: dora_andino_hal/wheel_joint_velocities
+  #       joints_speed_cmd: diff_drive_controller/joints_speed_cmd
+        # cmd_vel: gamepad/cmd_vel

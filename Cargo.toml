@@ -1,9 +1,14 @@
 [workspace]
 resolver = "2"
-members = ["andino", "andino-dora"]
+members = [
+  "andino",
+  "andino_dora",
+  "dora_node_hub/dora_andino_hal",
+  "dora_node_hub/dora_diff_drive_controller",
+  "dora_node_hub/dora_teleop_keyboard",
+]
 
 [workspace.package]
-version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0" # TODO(francocipollone): TBD
 repository = "https://github.com/ekumenlabs/andino-rs"
@@ -12,7 +17,15 @@ repository = "https://github.com/ekumenlabs/andino-rs"
 clap = { version = "4.5" }
 crossterm = { version = "0.29" }
 env_logger = { version = "0.10" }
+eyre = "0.6.8"
+futures = "0.3.21"
 itertools = { version = "0.14" }
 log = { version = "0.4" }
+rand = "0.8.5"
 serialport = { version = "4.7"}
 thiserror = { version = "1.0" }
+tokio = { version = "1.24.2", features = ["rt", "macros"] }
+
+dora-node-api = { version = "0.3.11"}
+dora-cli = { version = "0.3.11"}
+dora-tracing = { version = "0.3.11"}

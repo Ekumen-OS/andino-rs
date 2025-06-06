@@ -105,6 +105,28 @@ RUN find ${CARGO_HOME} -type d -exec chmod 777 {} + && \
     find ${RUSTUP_HOME} -type d -exec chmod 777 {} + && \
     find ${RUSTUP_HOME} -type f -exec chmod a+rw {} +
 
+##############################################################################
+# Final configuration
+##############################################################################
+
+# Update pip: Default pip version(22.) presents issues with
+# installing packages without setupt.py file:
+# See https://stackoverflow.com/questions/78034052/unknown-project-name-and-version-number-for-my-own-pip-package
+RUN pip install --upgrade pip
+
+# Install desired cargo bin crates
+RUN cargo install \
+    # Depending on binary crates doesn't allow you to use them from cli.
+    # https://github.com/rust-lang/cargo/issues/2267
+    dora-cli
+
+# The previous commands roots permissions in ${CARGO_HOME} and ${RUSTUP_HOME}.
+# Establish wide permissions for user 'dev'. This step takes several minutes.
+RUN find ${CARGO_HOME} -type d -exec chmod 777 {} + && \
+    find ${CARGO_HOME} -type f -exec chmod a+rw {} + && \
+    find ${RUSTUP_HOME} -type d -exec chmod 777 {} + && \
+    find ${RUSTUP_HOME} -type f -exec chmod a+rw {} +
+
 ################################################################################
 # Login Shell
 ################################################################################
