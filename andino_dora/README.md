@@ -34,3 +34,38 @@ Run the dataflow locally:
 ```
 dora run graphs/dataflow.yml
 ```
+
+### object_detection.yml
+
+Runs a dataflow to run object detection algorithm.
+
+```mermaid
+        flowchart TB
+  camera["**camera**"]
+  object-detection["**object-detection**"]
+  rerun-viz[/"**rerun-viz**"\]
+subgraph ___dora___ [dora]
+  subgraph ___timer_timer___ [timer]
+    dora/timer/millis/100[\millis/100/]
+  end
+end
+  dora/timer/millis/100 -- tick --> camera
+  camera -- image --> object-detection
+  object-detection -- bbox as boxes2d --> rerun-viz
+  camera -- image --> rerun-viz
+```
+
+Build the dataflow:
+```
+dora build graphs/object_detection.yml
+```
+
+Run the dataflow locally:
+```
+dora run graphs/object_detection.yml
+```
+
+Run the Rerun server locally (not on the andino):
+```
+rerun --serve --web-viewer --bind <your_ip>
+```

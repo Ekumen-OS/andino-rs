@@ -72,6 +72,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \
     # linux
     libudev-dev \
+    # cv2 deps
+    ffmpeg libsm6 libxext6 \
+    # gl deps
+    mesa-utils libvulkan1 libvulkan-dev vulkan-tools libegl1 libgles2 \
+    # Rerun specifically needs libxkbcommon-dev, libxkbcommon-x11-0
+    libasound2-dev libudev-dev libx11-dev  libxinerama-dev libxkbcommon-dev libxkbcommon-x11-0 x11-apps x11-xserver-utils \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
@@ -126,6 +132,26 @@ RUN find ${CARGO_HOME} -type d -exec chmod 777 {} + && \
     find ${CARGO_HOME} -type f -exec chmod a+rw {} + && \
     find ${RUSTUP_HOME} -type d -exec chmod 777 {} + && \
     find ${RUSTUP_HOME} -type f -exec chmod a+rw {} +
+
+################################################################################
+# Pre install dora nodes
+################################################################################
+
+RUN mkdir -p /home/${USERNAME}/.dora && \
+    chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.dora && \
+    chmod 777 /home/${USERNAME}/.dora
+RUN git clone --depth 1 --branch v0.3.11 --single-branch https://github.com/dora-rs/dora.git /home/${USERNAME}/.dora/dora && \
+    pip install /home/${USERNAME}/.dora/dora/node-hub/dora-keyboard && \
+    pip install /home/${USERNAME}/.dora/dora/node-hub/dora-rerun && \
+    pip install /home/${USERNAME}/.dora/dora/node-hub/dora-yolo && \
+    pip install /home/${USERNAME}/.dora/dora/node-hub/opencv-video-capture
+
+################################################################################
+# NVIDIA
+################################################################################
+
+ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
+ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics,display,video,utility,compute
 
 ################################################################################
 # Login Shell
