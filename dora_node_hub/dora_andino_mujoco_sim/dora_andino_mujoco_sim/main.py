@@ -1,6 +1,7 @@
 """Main entry point for the Andino MuJoCo simulation dora node."""
 
 import os
+import importlib.resources as resources
 
 import pyarrow as pa
 import mujoco
@@ -9,15 +10,13 @@ from dora import Node
 
 def get_scene_path():
     """Get the path to the MuJoCo scene file."""
-    import os
-    root_dir = os.path.dirname(os.path.abspath(__file__))
-    scene_path = os.path.join(root_dir, "assets/scene.xml")
-    if not os.path.exists(scene_path):
+    scene_path = resources.files("dora_andino_mujoco_sim").joinpath("assets", "scene.xml")
+    if not scene_path.is_file():
         raise FileNotFoundError(
             f"Scene file not found at {scene_path}. "
             "Please ensure the assets directory is present."
         )
-    return scene_path
+    return str(scene_path)
 
 def get_timestep_config():
     """Get the timestep configuration for the MuJoCo simulation."""
@@ -57,7 +56,7 @@ def main():
                     # Advance the simulation
                     mujoco.mj_step(mj_model, mj_data)
 
-                    # Send position and velocity data or any other form of feedback from MuJoCo
+                    # Send position and velocity data or any other form of feedback from MuJoCo.
                     # Replicating same behavior as the dora_andino_hal we outputs:
                     # - wheel_joint_positions
                     # - wheel_joint_velocities
