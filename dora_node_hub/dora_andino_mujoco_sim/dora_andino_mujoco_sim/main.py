@@ -1,10 +1,11 @@
 """Main entry point for the Andino MuJoCo simulation dora node."""
 
+import os
+
 import pyarrow as pa
-from dora import Node
 import mujoco
 import mujoco.viewer
-
+from dora import Node
 
 def get_scene_path():
     """Get the path to the MuJoCo scene file."""
@@ -18,14 +19,24 @@ def get_scene_path():
         )
     return scene_path
 
+def get_timestep_config():
+    """Get the timestep configuration for the MuJoCo simulation."""
+    timestep = os.getenv("TIMESTEP", "0.001")
+    try:
+        timestep = float(timestep)
+    except ValueError:
+        raise ValueError(f"Invalid TIMESTEP value: {timestep}. Must be a float.")
+    return timestep
+
 def main():
     """Execute the Andino MuJoCo simulation dora node."""
     try:
 
       node = Node("Andino MuJoCo Simulation")
 
+      # Load the MuJoCo model from the XML file.
       mj_model = mujoco.MjModel.from_xml_path(get_scene_path())
-      mj_model.opt.timestep = 1e-3  # 1ms
+      mj_model.opt.timestep = get_timestep_config()
       mj_data = mujoco.MjData(mj_model)
 
       # Andino left and right wheel joint speeds commands.
@@ -35,14 +46,16 @@ def main():
 
         for event in node:
             if event["type"] == "INPUT":
-                if event["id"] == "tick":
+                if event["id"] == "viewer_tick":
+                    # Handle viewer tick events to update the viewer.
+                    viewer.sync()
+                if event["id"] == "model_tick":
                     # Pass the joint speeds to the MuJoCo data structure.
                     mj_data.actuator("left-motor").ctrl[0] = left_joint_speed_cmd
                     mj_data.actuator("right-motor").ctrl[0] = right_joint_speed_cmd
 
                     # Advance the simulation
                     mujoco.mj_step(mj_model, mj_data)
-                    viewer.sync()
 
                     # Send position and velocity data or any other form of feedback from MuJoCo
                     # Replicating same behavior as the dora_andino_hal we outputs:

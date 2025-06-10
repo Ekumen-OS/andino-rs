@@ -33,6 +33,18 @@ uv run pytest . # Test
 
 ## YAML Specification
 
+### inputs
+  - viewer_tick: Timer to update viewer of MuJoCo.
+  - model_tick: Timer to step MuJoCo model. Pair with `TIMESTEP` env var.
+  - joints_speed_cmd: Joints speed commands for the left and right wheel. [rad/s]
+
+### outputs
+  - wheel_joint_positions: Feedback info about left and right wheel joint position. [rads]
+  - wheel_joint_velocities: Feedback info about left and right wheel joint velocity. [rads/s]
+
+### envs
+  - TIMESTEP: Time step for the MuJoCo simulation.
+
 ## Examples
 
 ```yml
@@ -43,11 +55,14 @@ nodes:
     build: pip install -e .
     path: dora_andino_mujoco_sim
     inputs:
-      tick: dora/timer/millis/10
+      viewer_tick: dora/timer/millis/17 # ~60 Hz
+      model_tick: dora/timer/millis/1 # ~1000Hz
       joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
     outputs:
       - wheel_joint_positions # [left, right]
       - wheel_joint_velocities # [left, right]
+    env:
+      TIMESTEP: 0.001 # [s]
 ```
 
 ## License
