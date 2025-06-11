@@ -39,8 +39,8 @@ jobs:
         uses: Swatinem/rust-cache@v2
       - run: pre-commit run --all-files --verbose --show-diff-on-failure
 
-  build_and_test:
-    name: Build & Test
+  build_and_test_cargo:
+    name: Cargo Build & Test
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -56,3 +56,18 @@ jobs:
         run: cargo build --workspace --all-targets
       - name: Cargo test
         run: cargo test --workspace --all-targets
+
+  build_and_test_uv:
+    name: UV Build & Test
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv package manager
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install uv
+      - name: UV build
+        run: uv build --all-packages
+      - name: pytest
+        run: uv run --all-packages pytest
