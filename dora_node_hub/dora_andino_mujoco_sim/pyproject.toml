@@ -1,0 +1,25 @@
+[project]
+name = "dora_andino_mujoco_sim"
+version = "0.1.0"
+authors = [{ name = "Franco Cipollone", email = "franco.c@ekumenlabs.com" }]
+description = "dora_andino_mujoco_sim"
+license = { text = "Apache-2.0" } # TODO(francocipollone): TBD
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "dora-rs >= 0.3.9",
+    "mujoco==3.2.6",
+]
+
+[dependency-groups]
+dev = ["pytest >=8.1.1", "ruff >=0.9.1"]
+
+[project.scripts]
+dora_andino_mujoco_sim = "dora_andino_mujoco_sim.main:main"
+
+[tool.ruff.lint]
+extend-select = [
+  "D",   # pydocstyle
+  "UP"
+]

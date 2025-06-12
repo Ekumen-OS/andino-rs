@@ -1,0 +1,50 @@
+<mujoco model="table">
+    <compiler angle="radian" balanceinertia="true"/>
+
+    <worldbody>
+        <body name="table" pos="0.0 0.0 0.6">
+
+            <body name="left_side_table" pos="0.0 -0.5850000000000001 0.05">
+                <geom name="left_side" type="box" size="1.12 0.025 0.05" rgba="0.52 0.38 0.25 1"/>
+            </body><!-- Left side -->
+
+            <body name="right_side_table" pos="0.0 0.5850000000000001 0.05">
+                <geom name="right_side" type="box" size="1.12 0.025 0.05" rgba="0.52 0.38 0.25 1"/>
+            </body><!-- Right side -->
+
+            <body name="front_side_table" pos="1.145 0.0 0.05">
+                <geom name="front_side" type="box" size="0.025 0.56 0.05" rgba="0.52 0.38 0.25 1"/>
+            </body><!-- Front side -->
+
+            <body name="back_side_table" pos="-1.145 0.0 0.05">
+                <geom name="back_side" type="box" size="0.025 0.56 0.05" rgba="0.52 0.38 0.25 1"/>
+            </body><!-- Back side -->
+
+            <body name="base_table" pos="0.0 0.0 -0.025">
+                <geom name="base_surface" type="box" size="1.12 0.56 0.025" friction="1 0.005 0.0001" rgba="0.52 0.38 0.25 1"/>
+            </body><!-- Base -->
+
+            <body name="table_legs" pos="0.0 0.0 -0.6">
+
+                <body name="left_top_leg" pos="1.12 0.56 0.27499999999999997">
+                    <geom name="left_top_leg" type="box" size="0.05 0.05 0.3" rgba="0.52 0.38 0.25 1"/>
+                </body><!-- left_top_leg -->
+
+                <body name="right_top_leg" pos="1.12 -0.56 0.27499999999999997">
+                    <geom name="right_top_leg" type="box" size="0.05 0.05 0.3" rgba="0.52 0.38 0.25 1"/>
+                </body><!-- right_top_leg -->
+
+                <body name="left_bottom_leg" pos="-1.12 0.56 0.27499999999999997">
+                    <geom name="left_bottom_leg" type="box" size="0.05 0.05 0.3" rgba="0.52 0.38 0.25 1"/>
+                </body><!-- left_bottom_leg -->
+
+                <body name="right_bottom_leg" pos="-1.12 -0.56 0.27499999999999997">
+                    <geom name="right_bottom_leg" type="box" size="0.05 0.05 0.3" rgba="0.52 0.38 0.25 1"/>
+                </body><!-- right_bottom_leg -->
+
+            </body><!-- Legs -->
+
+        </body> <!-- Table -->
+    </worldbody>
+
+</mujoco>

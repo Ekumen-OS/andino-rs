@@ -1,0 +1,17 @@
+[package]
+name = "andino_dora_sim"
+description = "Integration with Dora for Andino Simulation."
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+dora_andino_hal = { path = "../dora_node_hub/dora_andino_hal" }
+dora_diff_drive_controller = { path = "../dora_node_hub/dora_diff_drive_controller" }
+dora_teleop_keyboard = { path = "../dora_node_hub/dora_teleop_keyboard" }
+
+dora-cli = { workspace = true }
+dora-tracing = { workspace = true }
+eyre = { workspace = true }
+tokio = { workspace = true }

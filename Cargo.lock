@@ -94,6 +94,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "andino_dora_sim"
+version = "0.1.0"
+dependencies = [
+ "dora-cli",
+ "dora-tracing",
+ "dora_andino_hal",
+ "dora_diff_drive_controller",
+ "dora_teleop_keyboard",
+ "eyre",
+ "tokio",
+]
+
+[[package]]
 name = "android-tzdata"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

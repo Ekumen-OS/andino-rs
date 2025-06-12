@@ -1,0 +1,93 @@
+<mujoco model="andino">
+    <default>
+        <default class="visual">
+            <geom type="mesh" contype="0" conaffinity="0" group="2" rgba="0.3 0.3 0.3 1"/>
+        </default>
+    </default>
+
+    <asset>
+        <mesh name="chassis" file="meshes/andino/chassis.stl"/>
+        <mesh name="chassis_top" file="meshes/andino/chassis_top.stl"/>
+        <mesh name="caster_base" file="meshes/andino/caster_base.stl"/>
+        <mesh name="caster_wheel_support" file="meshes/andino/caster_wheel_support.stl"/>
+        <mesh name="caster_wheel" file="meshes/andino/caster_wheel.stl"/>
+        <mesh name="wheel" file="meshes/components/wheel.stl"/>
+        <mesh name="motor" file="meshes/andino/motor.stl"/>
+        <mesh name="rplidar-a1" file="meshes/sensors/rplidar-a1.stl"/>
+        <mesh name="camera_mount" file="meshes/sensors/camera_mount.stl"/>
+    </asset>
+
+    <worldbody>
+        <body name="chassis" pos="0.0 0.0 0.0" quat="0.707 0 0 -0.707">
+            <site name="chassis"/>
+            <joint type="free"/>
+            <inertial pos="0 0 -0.02" mass="0.5" diaginertia="0.0009 0.0009 0.0016"/>
+            <geom type="mesh" rgba="0 0 1 1" mesh="chassis"/>
+
+            <body name="chassis_top" pos="0 0 0.05">
+                <inertial pos="-0.02 0 0" mass="3" diaginertia="0.0018 0.0018 0.0033"/>
+                <geom type="mesh" rgba="0 0 1 1" mesh="chassis_top"/>
+            </body><!-- chassis_top -->
+
+            <body name="right_wheel" pos="0.0185 -0.0675 -0.017">
+                <site name="right_wheel"/>
+                <joint name="right_wheel_joint" type="hinge" axis="0 1 0" damping="0.001"  />
+                <geom class="visual" quat="0 0 -0.707107 -0.707107" type="mesh"  mesh="wheel"/>
+                <geom quat="1 1 0 0" type="cylinder" mass="0.03" size="0.03 0.010" />
+            </body><!-- right_wheel -->
+
+            <body name="left_wheel" pos="0.0185 0.0675 -0.017">
+                <joint name="left_wheel_joint" type="hinge" axis="0 1 0" damping="0.001" />
+                <geom class="visual" quat="0.707107 0.707107 0 0" type="mesh" mesh="wheel"/>
+                <geom quat="1 1 0 0" type="cylinder" mass="0.03" size="0.03 0.010" />
+            </body><!-- left_wheel -->
+
+            <body name="caster_base" pos="-0.076 0 -0.0155" >
+                <inertial pos="0 0 0" euler="0 0 0" mass="0.02" diaginertia="5.33e-06 5.33e-06 5.33e-06"/>
+                <geom type="mesh" contype="1" conaffinity="1" group="1"  rgba="0.79 0.82 0.93 1" mesh="caster_base"/>
+
+                <body name="caster_wheel_support" pos="-0.001 0 0" >
+                    <inertial pos="0 0 0" mass="0.1" diaginertia="5.33e-06 5.33e-06 5.33e-06"/>
+                    <geom type="mesh" contype="1" conaffinity="1" group="1" rgba="0.79 0.82 0.93 1" mesh="caster_wheel_support"/>
+
+                    <body name="caster_wheel" pos="-0.023 0 -0.02" >
+                        <joint name="caster_wheel_support_to_caster_wheel" pos="0 0 0" type="hinge" axis="0 1 0" damping="0.001" />
+                        <geom type="mesh" rgba="0 0 0 1" mesh="caster_wheel"/>
+                    </body> <!-- caster_wheel -->
+
+                </body> <!-- caster_wheel_support -->
+
+            </body> <!-- caster_base -->
+
+            <body name="rplidar-al" pos="0.05 0 0.08" >
+                <inertial pos="0 0 0" mass="0.1" diaginertia="6.45e-06 6.45e-06 1.12e-05"/>
+                <geom quat="-1 0 0 0" type="mesh" rgba="0.3 0.3 0.3 1" mesh="rplidar-a1"/>
+            </body><!-- rplidar-al -->
+
+            <body name="motor_right" pos="0.0015 -0.03775 -0.017">
+                <inertial pos="0 0 0" quat="0 -1 0 0" mass="0.35" diaginertia="7.16e-06 4.37e-05 4.50e-05"/>
+                <geom quat="0 -1 0 0" type="mesh" contype="1" conaffinity="1" group="1" rgba="0 0.5 0.8 1" mesh="motor"/>
+            </body><!-- motor_right -->
+
+            <body name="motor_left" pos="0.0015 0.03775 -0.017">
+                <inertial pos="0 0 0" euler="0 0 0" mass="0.35" diaginertia="7.16e-06 4.375e-05 4.50e-05"/>
+                <geom type="mesh" contype="1" conaffinity="1" group="1"  rgba="0 0.5 0.8 1" mesh="motor"/>
+            </body> <!-- motor_left-->
+
+            <body name="camera_mount" pos="0.085 0 0.025">
+                <geom type="mesh" contype="1" conaffinity="1" group="1" rgba="0 0 1 1" mesh="camera_mount"/>
+                <camera name="andino_cam" mode="fixed" xyaxes="0 -1 0 0 0 1" pos="-0.1 0 0.09 "/>
+            </body> <!-- camera_mount -->
+
+        </body><!-- chassis -->
+
+    </worldbody>
+
+    <!-- Interface -->
+    <actuator>
+        <!-- actuator range in radians/sec: w=v_max/radius = 0.2/0.03 -->
+        <velocity name="right-motor" joint="right_wheel_joint" kv="1" ctrllimited="false"/>
+        <velocity name="left-motor" joint="left_wheel_joint" kv="1" ctrllimited="false"/>
+    </actuator>
+
+</mujoco>

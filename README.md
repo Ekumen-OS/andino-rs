@@ -20,8 +20,10 @@ Refer to official instructions for [building an andino](https://github.com/Ekume
 
  - [`andino`](/andino/): Core library for andino robot. It provides a hardware abstraction layer (HAL) to communciate with the andino robot.
  - [`andino_dora`](/andino_dora/): It provides dora dataflows to run andino-integration.
+ - [`andino_dora_sim`](/andino_dora/): It provides dora dataflows to run andino simulation.
  - [`dora_node_hub`](/dora_node_hub/): Dora nodes.
    -  [`dora_andino_hal`](dora_node_hub/dora_andino_hal): Integration of the andino hal with Dora.
+   -  [`dora_andino_mujoco_sim`](dora_node_hub/dora_andino_mujoco_sim): Integration of the andino mujoco simulation with Dora.
    -  [`dora_diff_drive_controller`](dora_node_hub/dora_diff_drive_controller): Differential drive controller to be used in Dora frameworks.
    -  [`dora_teleop_keyboard`](dora_node_hub/dora_teleop_keyboard): Dora node for teleoperating mobile robots using the keyboard.
 
@@ -40,34 +42,15 @@ cargo build
 
 What is dora? See https://dora-rs.ai/
 
-### Teleoperating the Andino robot
+### `andino_dora` package
 
-```mermaid
-        flowchart TB
-  dora_andino_hal["**dora_andino_hal**"]
-  dora_diff_drive_controller["**dora_diff_drive_controller**"]
-  dora_keyboard[\"**dora_keyboard**"/]
-  dora_teleop_keyboard["**dora_teleop_keyboard**"]
-subgraph ___dora___ [dora]
-  subgraph ___timer_timer___ [timer]
-    dora/timer/millis/100[\millis/100/]
-  end
-end
-  dora_diff_drive_controller -- joints_speed_cmd --> dora_andino_hal
-  dora/timer/millis/100 -- tick --> dora_andino_hal
-  dora_teleop_keyboard -- cmd_vel --> dora_diff_drive_controller
-  dora_keyboard -- char as key --> dora_teleop_keyboard
-```
+[`andino_dora`](andino_dora) package provides serveral dora dataflows.
+Check [`andino_dora`'s README](andino_dora) for more information on how to run it.
 
-Build the `andino_dora`'s dataflow:
-```
-dora build andino_dora/graphs/dataflow.yml
-```
+### `andino_dora_sim` package
 
-Run the dataflow locally:
-```
-dora run andino_dora/graphs/dataflow.yml
-```
+[`andino_dora_sim`](andino_dora_sim) package provides serveral dora dataflows for using the simulation.
+Check [`andino_dora_sim`'s README](andino_dora_sim) for more information on how to run it.
 
 ### Appendix
 

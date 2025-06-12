@@ -1,0 +1,12 @@
+<mujoco model="hq4_office">
+    <asset>
+        <mesh name="hq4_office" file="meshes/hq4_office_ceiling.stl" scale="1 1 1"/>
+        <material name="material_1" emission="0.85" specular="0.35" rgba="0.5 0.5 0.5 1"/>
+    </asset>
+
+    <worldbody>
+        <body name="hq4_office" pos="0. 0. -0.10" euler="0. 0. -1.57">
+            <geom name="office" type="mesh" mesh="hq4_office" group="2" contype="0" conaffinity="0" material="material_1"/>
+        </body><!-- hq4_office -->
+    </worldbody>
+</mujoco>

@@ -1,0 +1,16 @@
+<mujoco model="Andino">
+    <option integrator="implicitfast"/>
+
+    <include file="andino/andino.xml"/>
+    <include file="office/table.xml"/>
+    <include file="office/hq4_office.xml"/>
+
+    <worldbody>
+        <light diffuse="1 1 1" pos = "0 0 12" dir="0 0 -1"></light>
+        <light diffuse="1 1 1" pos = "0 4 0" dir="0 -1 0"></light>
+        <light diffuse="1 1 1" pos = "4 0 0" dir="-1 0 0"></light>
+
+        <geom name="ground_plane" type="plane" size="10 17 0.1" friction=".1" contype="1" conaffinity="1" rgba="0 .5 .8 1"/>
+    </worldbody>
+
+</mujoco>
