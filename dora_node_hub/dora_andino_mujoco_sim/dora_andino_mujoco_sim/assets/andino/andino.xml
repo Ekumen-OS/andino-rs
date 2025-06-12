@@ -17,6 +17,11 @@
         <mesh name="camera_mount" file="meshes/sensors/camera_mount.stl"/>
     </asset>
 
+    <visual>
+        <global fovy="70"/>
+        <map znear="0.001"/>
+    </visual>
+
     <worldbody>
         <body name="chassis" pos="0.0 0.0 0.0" quat="0.707 0 0 -0.707">
             <site name="chassis"/>
@@ -76,7 +81,7 @@
 
             <body name="camera_mount" pos="0.085 0 0.025">
                 <geom type="mesh" contype="1" conaffinity="1" group="1" rgba="0 0 1 1" mesh="camera_mount"/>
-                <camera name="andino_cam" mode="fixed" xyaxes="0 -1 0 0 0 1" pos="-0.1 0 0.09 "/>
+                <camera name="andino_cam" mode="fixed" resolution="640 480" fovy="70" xyaxes="0 -1 0 0 0 1" pos="0 0 0.19 "/>
             </body> <!-- camera_mount -->
 
         </body><!-- chassis -->

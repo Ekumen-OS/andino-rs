@@ -16,7 +16,7 @@ async fn main() -> eyre::Result<()> {
     let dataflow = if args.len() > 1 {
         Path::new(&args[1])
     } else {
-        Path::new("mujoco_teleoperation.yml")
+        Path::new("mujoco_sim.yml")
     };
 
     build_dataflow(dataflow).await?;

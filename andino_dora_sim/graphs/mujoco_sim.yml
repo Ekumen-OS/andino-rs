@@ -9,10 +9,12 @@ nodes:
       # Model tick should be paired with the timestep configured for the simulation.
       # See env section below.
       model_tick: dora/timer/millis/1 # ~1000Hz
+      camera_tick: dora/timer/millis/100 # 10 Hz
       joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
     outputs:
       - wheel_joint_positions # [left, right]
       - wheel_joint_velocities # [left, right]
+      - camera_image # Encoding: bgr8
     env:
       TIMESTEP: 0.001 # [s]
 
@@ -47,3 +49,23 @@ nodes:
     env:
       DEFAULT_LINEAR_SPEED: 0.3 # [m/s]
       DEFAULT_ANGULAR_SPEED: 1.0 # [rad/s]
+
+  # Run yolo object detection on the camera image.
+  - id: object-detection
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-yolo&subdirectory=node-hub/dora-yolo
+    path: dora-yolo
+    inputs:
+      image: dora_andino_mujoco_sim/camera_image
+    outputs:
+      - bbox
+
+  # Visualize the camera image and the detected bounding boxes in Rerun.
+  - id: rerun-viz
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-rerun&subdirectory=node-hub/dora-rerun
+    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-rerun
+    path: dora-rerun
+    inputs:
+      image: dora_andino_mujoco_sim/camera_image
+      boxes2d: object-detection/bbox
+    env:
+      OPERATING_MODE: SPAWN
