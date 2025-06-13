@@ -20,20 +20,21 @@ The Andino can be controlled using the keyboard in a teleop_twist_keyboard
 fashion.
 """
 
-from multiprocessing import Process, Value
 import sys
 import termios
 import tty
+from multiprocessing import Process, Value
+from typing import Any
 
 
 def input_handler(
-    linear_direction,
-    angular_direction,
-    linear_speed,
-    angular_speed,
-    acceleration,
-    keep_running,
-):
+    linear_direction: Any,
+    angular_direction: Any,
+    linear_speed: Any,
+    angular_speed: Any,
+    acceleration: Any,
+    keep_running: Any,
+) -> None:
     """Check for user input and control the Andino."""
     directions = {
         "q": (1.0, 1.0),
@@ -83,33 +84,29 @@ def input_handler(
 
 
 def simulation(
-    linear_direction,
-    angular_direction,
-    linear_speed,
-    angular_speed,
-    acceleration,
-    keep_running,
-):
+    linear_direction: Any,
+    angular_direction: Any,
+    linear_speed: Any,
+    angular_speed: Any,
+    acceleration: Any,
+    keep_running: Any,
+) -> None:
     """Run the Andino simulation."""
+    import os
+
     import mujoco
     import mujoco.viewer
 
-    # Get path from the pyproject root
-    import os
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     scene_path = os.path.join(root_dir, "assets/scene.xml")
     if not os.path.exists(scene_path):
-        raise FileNotFoundError(
-            f"Scene file not found at {scene_path}. "
-            "Please ensure the assets directory is present."
-        )
+        raise FileNotFoundError(f"Scene file not found at {scene_path}. Please ensure the assets directory is present.")
 
     model = mujoco.MjModel.from_xml_path(scene_path)
     model.opt.timestep = 1e-3  # 1ms
     data = mujoco.MjData(model)
 
     with mujoco.viewer.launch_passive(model, data) as viewer:
-
         while viewer.is_running() and keep_running.value:
             # Calculate the control actions
             linear_vel = linear_direction.value * linear_speed.value

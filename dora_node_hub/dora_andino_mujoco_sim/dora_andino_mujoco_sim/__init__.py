@@ -10,7 +10,6 @@ try:
     with open(readme_path, encoding="utf-8") as f:
         __doc__ = f.read()
 except FileNotFoundError:
-    raise FileNotFoundError(
-        f"README file not found at {readme_path}. "
-        "Please ensure the README.md file is present in the package directory."
+    raise FileNotFoundError from FileNotFoundError(
+        f"README file not found at {readme_path}. Please ensure the README.md file is present in the package directory."
     )

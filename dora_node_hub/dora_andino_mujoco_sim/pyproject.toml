@@ -18,8 +18,6 @@ dev = ["pytest >=8.1.1", "ruff >=0.9.1"]
 [project.scripts]
 dora_andino_mujoco_sim = "dora_andino_mujoco_sim.main:main"
 
-[tool.ruff.lint]
-extend-select = [
-  "D",   # pydocstyle
-  "UP"
-]
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
