@@ -5,8 +5,11 @@ from importlib import resources
 
 import mujoco
 import mujoco.viewer
+import numpy as np
 import pyarrow as pa
 from dora import Node
+
+MUJOCO_ANDINO_CAMARA_NAME = "andino_cam"
 
 
 def get_scene_path() -> str:
@@ -26,6 +29,24 @@ def get_timestep_config() -> float:
     return timestep
 
 
+def convert_rgb_to_bgr(frame_rgb: np.ndarray) -> np.ndarray:
+    """Convert an RGB frame to BGR format.
+
+    This is useful for compatibility with OpenCV and other libraries that expect BGR format.
+
+    Args:
+        frame_rgb (numpy.ndarray): Input frame in RGB format (H, W, 3).
+
+    Returns:
+        numpy.ndarray: Frame converted to BGR format (H, W, 3).
+
+    """
+    CHANNEL_DIMENSION = 3
+    if frame_rgb.ndim == CHANNEL_DIMENSION and frame_rgb.shape[2] == CHANNEL_DIMENSION:
+        return frame_rgb[:, :, ::-1]
+    raise ValueError("Input frame must be a 3-channel RGB image.")
+
+
 def main() -> None:
     """Execute the Andino MuJoCo simulation dora node."""
     try:
@@ -35,6 +56,7 @@ def main() -> None:
         mj_model = mujoco.MjModel.from_xml_path(get_scene_path())
         mj_model.opt.timestep = get_timestep_config()
         mj_data = mujoco.MjData(mj_model)
+        mj_renderer = mujoco.Renderer(mj_model)
 
         # Andino left and right wheel joint speeds commands.
         left_joint_speed_cmd = 0.0
@@ -73,6 +95,20 @@ def main() -> None:
                         node.send_output(
                             "wheel_joint_velocities",
                             data=pa.array(wheel_joint_velocities, type=pa.float64()),
+                            metadata=event["metadata"],
+                        )
+                    if event["id"] == "camera_tick":
+                        mj_renderer.update_scene(mj_data, camera=MUJOCO_ANDINO_CAMARA_NAME)
+                        frame = convert_rgb_to_bgr(mj_renderer.render())
+                        metadata = event["metadata"]
+                        metadata["encoding"] = "bgr8"
+                        metadata["width"] = int(frame.shape[1])
+                        metadata["height"] = int(frame.shape[0])
+                        # Send the camera image as a flattened array.
+                        # This is compatible with the camera image output format used for the real robot.
+                        node.send_output(
+                            "camera_image",
+                            data=pa.array(frame.ravel(), type=pa.uint8()),
                             metadata=event["metadata"],
                         )
                     if event["id"] == "joints_speed_cmd":
