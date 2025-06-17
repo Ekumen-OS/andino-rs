@@ -11,10 +11,9 @@ Dora integration of Andino Simulation
 </p>
 
 Runs a dataflow for running the andino MuJoCo simulation along with:
- - keyboard teleoperatation of the robot.
- - object detection using yolo.
- - Rerun visualization.
-
+ - keyboard teleoperation of the robot.
+ - object detection using YOLOv8.
+ -  `rerun` visualization.
 
 ```mermaid
         flowchart TB
