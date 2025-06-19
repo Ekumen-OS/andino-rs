@@ -3,7 +3,7 @@ name = "dora_andino_mujoco_sim"
 version = "0.1.0"
 authors = [{ name = "Franco Cipollone", email = "franco.c@ekumenlabs.com" }]
 description = "dora_andino_mujoco_sim"
-license = { text = "Apache-2.0" } # TODO(francocipollone): TBD
+license = { text = "BSD 3-Clause" }
 readme = "README.md"
 requires-python = ">=3.10"
 
