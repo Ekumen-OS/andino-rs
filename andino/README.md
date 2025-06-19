@@ -12,7 +12,7 @@ cargo build
 
  - You need a built andino! Refer to [andino_hardware](https://github.com/Ekumen-OS/andino/tree/humble/andino_hardware) to setup everything.
 
- - You can partially test the HAL by using only an Arduino Nano, correctly loaded with the firmware: See [andino_firmware](htthttps://github.com/Ekumen-OS/andino/tree/humble/andino_firmware)
+ - You can partially test the HAL by using only an Arduino Nano, correctly loaded with the firmware. See [andino_firmware](htthttps://github.com/Ekumen-OS/andino/tree/humble/andino_firmware) for further reference.
 
 ## Examples
 

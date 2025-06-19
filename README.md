@@ -12,7 +12,7 @@
 
 # andino-rs
 
-Oxidizing [andino](https://github.com/Ekumen-OS/andino) robot.
+Oxidizing the [andino](https://github.com/Ekumen-OS/andino) robot.
 
 <p align="center">
   <img src="docs/real_robot_crab.png" width=300 />
@@ -20,7 +20,7 @@ Oxidizing [andino](https://github.com/Ekumen-OS/andino) robot.
 
 ## :globe_with_meridians: Description
 
-This project provides a rustacean version on top of [andino](https://github.com/Ekumen-OS/andino) robot.
+This project provides a rustacean version of the [andino](https://github.com/Ekumen-OS/andino) robot.
 
 > [!TIP]
 > *andino* is a fully open-source diff drive robot designed for educational purposes and low-cost applications. Its ecosystem comprehends several integrations with many frameworks and simulations. Refer to official website: https://github.com/Ekumen-OS/andino
@@ -28,11 +28,9 @@ to know more about *andino* and its ecosystem.
 
 ## Prerequisites
 
-For real robot:
- - Refer to official instructions for [building an andino](https://github.com/Ekumen-OS/andino/tree/humble/andino_hardware).
+For the real robot, refer to official instructions on [building an andino](https://github.com/Ekumen-OS/andino/tree/humble/andino_hardware).
 
-For simulation:
- - Refer to [workspace-setup](#workspace-setup).
+For simulation, refer to [workspace setup](#workspace-setup) instructions.
 
 ## Platforms
 
@@ -60,13 +58,13 @@ Refer to [.devcontainer/README.md](.devcontainer/README.md)
 
 ### Build systems
 
-This repository combines both `rust` and `python` packages, therefore `cargo` and `uv` are being used respectively
+This repository combines both `rust` and `python` packages. `cargo` and `uv` are the tools of choice.
 
- - Building cargo packages.
+ - Building `rust` packages:
     ```
     cargo build
     ```
- - Building uv packages.
+ - Building `python` packages:
     ```
     uv build --all-packages
     ```
@@ -91,7 +89,7 @@ Check [`andino_dora`'s README](andino_dora) for more information on how to run i
   <img src="docs/mujoco_sim.png" width=800 />
 </p>
 
-[`andino_dora_sim`](andino_dora_sim) package provides serveral dora dataflows for using simulations instead of the real robot to speed up development or if you don't have the *andino* built yet.
+[`andino_dora_sim`](andino_dora_sim) package provides serveral dora dataflows for using simulations instead of the real robot to speed up development or if you don't have an *andino* built yet.
 
 Check [`andino_dora_sim`'s README](andino_dora_sim) for more information on how to run it.
 
@@ -118,8 +116,6 @@ Issues or PRs are always welcome! Please refer to [CONTRIBUTING](CONTRIBUTING.md
     - To add it to git's hook, use:
      ```
      pip install pre-commit
-     ```
-     ```
      pre-commit install
      ```
-    - Every time a commit is attempted, pre-commit will run. The checks can be by-passed by adding `--no-verify` to *git commit*, but take into account pre-commit also runs in the Github Actions as a required check, so you will need it to pass.
+    - Every time a commit is attempted, pre-commit will run. The checks can be by-passed by adding `--no-verify` to *git commit*, but take into account pre-commit also runs as a required Github Actions check, so you will need it to pass.

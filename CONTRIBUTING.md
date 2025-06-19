@@ -96,7 +96,7 @@ get acquainted with this development process.
 
 1. **Read the** [reporting_bugs](#reporting-bugs) **and** [suggesting_enhancements](#suggesting-enhancements) **sections first.**
 
-1. **Fork the andino-rs package** you want to contribute to. This will create
+1. **Fork the `andino-rs` repository** you want to contribute to. This will create
    your own personal copy of the package. All of your development should
    take place in your fork.
    - An important thing to do is create a remote pointing to the [upstream remote repository](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/configuring-a-remote-for-a-fork). This way, you can always check for modifications on the original repository and **always** keep your fork repository up to date.
@@ -111,7 +111,7 @@ get acquainted with this development process.
 
 #### Process
 
-All andino-rs team members actively:
+All `andino-rs` team members actively:
 
 * **Watch** all andino-rs-related repositories to receive email notifications of new issues / pull requests
 * Provide **feedback** to issues as soon as possible
