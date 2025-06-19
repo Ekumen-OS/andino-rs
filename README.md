@@ -95,7 +95,7 @@ Check [`andino_dora_sim`'s README](andino_dora_sim) for more information on how 
 
 ### `dora_node_hub` folder
 
-Dora nodes created to support the dora integration. These nodes are used in many of the dataflows created at `*andino_dora*` and `*andino_dora_sim*` packages
+Dora nodes created to support the dora integration. These nodes are used in many of the dataflows created at `andino_dora` and `andino_dora_sim` packages.
 See [dora_node_hub](./dora_node_hub) folder.
 
 ### Appendix
