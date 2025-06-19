@@ -11,8 +11,9 @@ members = [
 
 [workspace.package]
 edition = "2024"
-license = "Apache-2.0" # TODO(francocipollone): TBD
+license = "BSD 3-Clause"
 repository = "https://github.com/ekumenlabs/andino-rs"
+authors = ["Franco Cipollone <franco.c@ekumenlabs.com>"]
 
 [workspace.dependencies]
 clap = { version = "4.5" }
