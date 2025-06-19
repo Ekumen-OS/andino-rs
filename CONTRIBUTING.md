@@ -2,7 +2,7 @@
 
 ## Contributing to andino-rs
 
-The following is a set of guidelines for contributing to andino-rs project.
+The following is a set of guidelines for contributing to `andino-rs` project.
 These are mostly guidelines, not rules. Use your best judgment, and feel free to
 propose changes to this document in a pull request.
 
@@ -47,10 +47,10 @@ Provide more context by answering these questions:
 
 Include details about your configuration and environment:
 
-* **Which version of andino-rs are you using?**?
+* **Which version of `andino-rs` are you using?**?
 * **What's the name and version of the OS you're using**?
-* **Are you running andino-rs using the provided docker container?** See [docker](docker/README.md).
-* **Are you running andino-rs in a virtual machine?** If so, which VM software are you using and which operating systems and versions are used for the host and the guest?
+* **Are you running `andino-rs` using the provided docker container?** See [docker](docker/README.md).
+* **Are you running `andino-rs` in a virtual machine?** If so, which VM software are you using and which operating systems and versions are used for the host and the guest?
 
 
 ### Suggesting Enhancements
@@ -85,7 +85,7 @@ After you've determined which repository your enhancement suggestion is related 
 * **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
 * **Include screenshots and animated GIFs** which show you following the described steps and clearly demonstrate the problem.
 * **Explain why this enhancement would be useful** to most users and isn't something that can or should be implemented as a separate application.
-* **Specify which version of andino-rs you're using.**
+* **Specify which version of `andino-rs` you're using.**
 * **Specify the name and version of the OS you're using.**
 
 ### Contributing Code
@@ -96,8 +96,8 @@ get acquainted with this development process.
 
 1. **Read the** [reporting_bugs](#reporting-bugs) **and** [suggesting_enhancements](#suggesting-enhancements) **sections first.**
 
-1. **Fork the `andino-rs` repository** you want to contribute to. This will create
-   your own personal copy of the package. All of your development should
+1. **Fork the `andino-rs` repository** . This will create
+   your own personal copy of the repository. All of your development should
    take place in your fork.
    - An important thing to do is create a remote pointing to the [upstream remote repository](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/configuring-a-remote-for-a-fork). This way, you can always check for modifications on the original repository and **always** keep your fork repository up to date.
 
@@ -113,7 +113,7 @@ get acquainted with this development process.
 
 All `andino-rs` team members actively:
 
-* **Watch** all andino-rs-related repositories to receive email notifications of new issues / pull requests
+* **Watch** all `andino-rs`-related repositories to receive email notifications of new issues / pull requests
 * Provide **feedback** to issues as soon as possible
 * **Review** pull requests as soon as possible
 
