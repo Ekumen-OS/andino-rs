@@ -6,5 +6,8 @@ dependencies = [
 ]
 
 [tool.uv.workspace]
-members = ["dora_node_hub/dora_andino_mujoco_sim"]
+members = [
+  "dora_node_hub/dora_andino_mujoco_sim",
+  "dora_node_hub/dora_gemini_diff_drive_navigation",
+]
 exclude = ['andino', 'andino_dora', 'andino_dora_sim',]

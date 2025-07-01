@@ -1,0 +1,7 @@
+nodes:
+  - id: dora_string_publisher_ui
+    build: cargo build -p dora_string_publisher_ui
+    path: ../../../target/debug/dora_string_publisher_ui
+    inputs:
+    outputs:
+      - submitted_string # [string]
