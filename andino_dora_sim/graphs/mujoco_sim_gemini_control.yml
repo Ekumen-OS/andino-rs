@@ -1,0 +1,56 @@
+nodes:
+  # Loads andino simulation in MuJoCo. This replaces the andino HAL with a simulated version.
+  # If we were to replace this node with dora_andino_hal node, it should be able to run the dataflow.
+  - id: dora_andino_mujoco_sim
+    build: pip install -e ../../dora_node_hub/dora_andino_mujoco_sim
+    path: dora_andino_mujoco_sim
+    inputs:
+      viewer_tick: dora/timer/millis/17 # ~60 Hz
+      # Model tick should be paired with the timestep configured for the simulation.
+      # See env section below.
+      model_tick: dora/timer/millis/1 # ~1000Hz
+      camera_tick: dora/timer/millis/100 # 10 Hz
+      joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
+    outputs:
+      - wheel_joint_positions # [left, right]
+      - wheel_joint_velocities # [left, right]
+      - camera_image # Encoding: bgr8
+    env:
+      TIMESTEP: 0.001 # [s]
+
+  # Differential drive controller node.
+  # This node takes the input command velocity (cmd_vel) [linear and angular velocity] and converts it to joint speed commands [rad/s] for the left and right wheels.
+  - id: dora_diff_drive_controller
+    build: cargo build -p dora_diff_drive_controller
+    path: ../../target/debug/dora_diff_drive_controller
+    inputs:
+      cmd_vel: dora_andino_gemini_control/cmd_vel
+    outputs:
+      - joints_speed_cmd # [left, right]
+    env:
+      WHEEL_RADIUS: 0.0315 # [m]
+      WHEEL_SEPARATION: 0.137 # [m]
+
+  # Visualize the camera image
+  - id: rerun-viz
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-rerun&subdirectory=node-hub/dora-rerun
+    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-rerun
+    path: dora-rerun
+    inputs:
+      image: dora_andino_mujoco_sim/camera_image
+    env:
+      OPERATING_MODE: SPAWN
+
+  - id: dora_andino_gemini_control
+    build: pip install -e ../../dora_node_hub/dora_andino_gemini_control
+    path: dora_andino_gemini_control
+    inputs:
+      tick: dora/timer/millis/1000 # 1 Hz
+      image: dora_andino_mujoco_sim/camera_image
+    outputs:
+      - cmd_vel # [linear_vel, 0, 0, 0, 0, angular_vel]
+    env:
+      COMMAND: "Move towards the box object in front of you. After being close enough, go to the sphere object and then to the cylinder object."
+      MODEL: "gemini-2.5-pro" # e.g: "gemini-2.0-flash-lite"
+      # Replace with your actual Gemini API key
+      GEMINI_API_KEY: ""

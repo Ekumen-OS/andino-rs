@@ -1,0 +1,16 @@
+<mujoco model="table">
+    <compiler angle="radian" balanceinertia="true"/>
+
+    <worldbody>
+        <body name="box_green" pos="-0.5 -1.5 0.1">
+          <geom name="box_green" type="box" size="0.1 0.1 0.1" rgba="0.0 1.0 0.0 1"/>
+        </body>
+        <body name="sphere_red" pos="1.0 -1.5 0.1">
+          <geom name="sphere_red" type="sphere" size="0.1" rgba="1.0 0.0 0.0 1"/>
+        </body>
+        <body name="cylinder_yellow" pos="0.5 -1.5 0.1">
+          <geom name="cylinder_yellow" type="cylinder" size="0.1 0.1" rgba="1.0 1.0 0.0 1"/>
+        </body>
+    </worldbody>
+
+</mujoco>
