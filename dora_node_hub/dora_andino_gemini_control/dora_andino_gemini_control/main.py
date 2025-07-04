@@ -5,7 +5,8 @@ import os
 import numpy as np
 import pyarrow as pa
 from dora import Node
-
+import cv2 as cv
+import time
 from dora_andino_gemini_control.controller import DiffDriveGeminiControl
 
 
@@ -25,6 +26,9 @@ def main() -> None:
     # Initialize the controller with the specified model
     controller = DiffDriveGeminiControl(model=model)
     last_image = None
+    cmd_vel = np.array(
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=np.float64
+    )  # Initialize cmd_vel with zeros
     for event in node:
         event_type = event["type"]
         if event_type == "INPUT":
@@ -48,15 +52,13 @@ def main() -> None:
                     .reshape((height, width, channels))
                 )
                 if encoding == "bgr8":
-                    frame = frame[:, :, ::-1]  # OpenCV image (BGR to RGB)
-                elif encoding == "rgb8":
                     pass
+                elif encoding == "rgb8":
+                    frame = frame[:, :, ::-1]  # Convert RGB to BGR
                 else:
                     raise RuntimeError(f"Unsupported image encoding: {encoding}")
 
                 # Convert the frame to png
-                import cv2 as cv
-
                 ret, frame = cv.imencode(".png", frame)
                 if not ret:
                     raise RuntimeError("Failed to encode image to PNG format.")
@@ -70,14 +72,19 @@ def main() -> None:
                 with open("last_image.png", "wb") as f:
                     f.write(last_image)
 
+                now = time.time()
                 velocities = controller.generate_velocities(
                     command=command, image_bytes=image_bytes
                 )
+                last_image = None
+                print(f"Time taken to generate velocities: {time.time() - now:.4f} seconds")
                 print(f"Generated velocities: {velocities}")
+                cmd_vel = velocities
+            if event_id == "cmd_vel_tick":
                 node.send_output(
                     "cmd_vel",
-                    data=pa.array(velocities.tolist(), type=pa.float64()),
-                    metadata=metadata,
+                    data=pa.array(cmd_vel.tolist(), type=pa.float64()),
+                    metadata=event["metadata"],
                 )
 
 
