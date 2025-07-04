@@ -1,5 +1,6 @@
 import json
 import os
+import time
 
 import numpy as np
 from google import genai
@@ -63,7 +64,7 @@ class DiffDriveGeminiControl:
         self.client = genai.Client(api_key=API_KEY)
         self.model = model
 
-    def generate_velocities(self, command: str, image_bytes: bytes) -> np.ndarray:
+    async def generate_velocities(self, command: str, image_bytes: bytes) -> np.ndarray:
         """Generate linear and angular velocities based on the command and image.
 
         Args:
@@ -99,7 +100,8 @@ class DiffDriveGeminiControl:
             system_instruction=self.SYSTEM_INSTRUCTION,
             temperature=0.2,
         )
-        response = self.client.models.generate_content(
+        now = time.time()
+        response = await self.client.aio.models.generate_content(
             model=self.model, contents=contents, config=config
         )
         if (
@@ -108,7 +110,7 @@ class DiffDriveGeminiControl:
             and response.candidates[0].content.parts
         ):
             response_text = response.candidates[0].content.parts[0].text
-            print(f"Response from Gemini: {response_text}")
+            print(f"Response from Gemini in {time.time() - now}: {response_text}")
             try:
                 velocity_data = json.loads(response_text)
                 linear_vel = velocity_data.get("linear_velocity", 0.0)

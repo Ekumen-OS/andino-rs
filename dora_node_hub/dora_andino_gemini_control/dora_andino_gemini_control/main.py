@@ -1,13 +1,21 @@
 """TODO: Add docstring."""
 
+import asyncio
 import os
+import threading
 
+import cv2 as cv
 import numpy as np
 import pyarrow as pa
 from dora import Node
-import cv2 as cv
-import time
+
 from dora_andino_gemini_control.controller import DiffDriveGeminiControl
+
+
+def start_event_loop(loop: asyncio.AbstractEventLoop) -> None:
+    """Starts the asyncio event loop in the background thread."""
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
 
 
 def main() -> None:
@@ -29,6 +37,14 @@ def main() -> None:
     cmd_vel = np.array(
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=np.float64
     )  # Initialize cmd_vel with zeros
+
+    # Setup for the background event loop thread
+    loop = asyncio.new_event_loop()
+    thread = threading.Thread(target=start_event_loop, args=(loop,), daemon=True)
+    thread.start()
+
+    generated_velocities_future = None
+
     for event in node:
         event_type = event["type"]
         if event_type == "INPUT":
@@ -72,12 +88,31 @@ def main() -> None:
                 with open("last_image.png", "wb") as f:
                     f.write(last_image)
 
-                now = time.time()
-                velocities = controller.generate_velocities(
-                    command=command, image_bytes=image_bytes
-                )
+                velocities = None
+                if (
+                    generated_velocities_future is not None
+                    and generated_velocities_future.done()
+                ):
+                    # Velocities generation has finished. Retrieving result...
+                    try:
+                        velocities = generated_velocities_future.result()
+                    except Exception as e:
+                        print(f"❌ ERROR from velocities generation: {e}")
+                    generated_velocities_future = None
+                elif generated_velocities_future is None:
+                    # Velocities generation has not been run yet. Scheduling it now.
+                    generated_velocities_future = asyncio.run_coroutine_threadsafe(
+                        controller.generate_velocities(
+                            command=command, image_bytes=image_bytes
+                        ),
+                        loop,
+                    )
+                    continue
+                else:
+                    # Velocities generation is still in progress. Continue...
+                    continue
+
                 last_image = None
-                print(f"Time taken to generate velocities: {time.time() - now:.4f} seconds")
                 print(f"Generated velocities: {velocities}")
                 cmd_vel = velocities
             if event_id == "cmd_vel_tick":

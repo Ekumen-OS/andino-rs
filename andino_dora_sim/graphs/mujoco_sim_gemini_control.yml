@@ -45,12 +45,14 @@ nodes:
     build: pip install -e ../../dora_node_hub/dora_andino_gemini_control
     path: dora_andino_gemini_control
     inputs:
-      tick: dora/timer/millis/1000 # 1 Hz
+      tick: dora/timer/millis/100
+      cmd_vel_tick: dora/timer/millis/100
       image: dora_andino_mujoco_sim/camera_image
     outputs:
       - cmd_vel # [linear_vel, 0, 0, 0, 0, angular_vel]
     env:
-      COMMAND: "Move towards the box object in front of you. After being close enough, go to the sphere object and then to the cylinder object."
-      MODEL: "gemini-2.5-pro" # e.g: "gemini-2.0-flash-lite"
+      COMMAND: "Move towards the sphere object in front of you. If no sphere is visible, rotate in place clockwise with 1 rad/s."
+      MODEL: "gemini-2.5-flash"
+      # MODEL: "gemini-2.5-flash-lite-preview-06-17"
       # Replace with your actual Gemini API key
       GEMINI_API_KEY: ""
