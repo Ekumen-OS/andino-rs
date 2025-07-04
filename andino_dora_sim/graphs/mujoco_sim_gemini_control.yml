@@ -48,11 +48,19 @@ nodes:
       tick: dora/timer/millis/100
       cmd_vel_tick: dora/timer/millis/100
       image: dora_andino_mujoco_sim/camera_image
+      command: dora_string_publisher/submitted_string
     outputs:
       - cmd_vel # [linear_vel, 0, 0, 0, 0, angular_vel]
     env:
-      COMMAND: "Move towards the sphere object in front of you. If no sphere is visible, rotate in place clockwise with 1 rad/s."
+      # COMMAND: # Not using this environment variable, instead we are using the dora_string_publisher node to provide the command.
       MODEL: "gemini-2.5-flash"
       # MODEL: "gemini-2.5-flash-lite-preview-06-17"
       # Replace with your actual Gemini API key
-      GEMINI_API_KEY: ""
+      GEMINI_API_KEY: "AIzaSyCij53gPZNOi4CDj40XTTDtYWiY0qHW4p0"
+
+  - id: dora_string_publisher
+    build: cargo build -p dora_string_publisher
+    path: ../../target/debug/dora_string_publisher
+    inputs:
+    outputs:
+      - submitted_string # [string]

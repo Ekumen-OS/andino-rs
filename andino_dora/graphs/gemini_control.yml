@@ -51,16 +51,23 @@ nodes:
       cmd_vel_tick: dora/timer/millis/100 # 10 Hz
       tick: dora/timer/millis/100 # 10 Hz
       image: camera/image
+      command: dora_string_publisher/submitted_string
     outputs:
       - cmd_vel # [linear_vel, 0, 0, 0, 0, angular_vel]
     env:
-      COMMAND: "Follow humans. If you don't see any humans, explore to find one. Avoid any obstacles in your way."
-      # COMMAND: "Turn left and move forward at the same time."
+      # COMMAND: # Not using this environment variable, instead we are using the dora_string_publisher node to provide the command.
       MODEL: "gemini-2.5-flash" # e.g: "gemini-2.0-flash-lite"
       # MODEL: "gemini-2.5-flash-lite-preview-06-17" # e.g: "gemini-2.0-flash-lite"
       # MODEL: "gemini-2.5-flash-lite-preview-06-17" # e.g: "gemini-2.0-flash-lite"
       # Replace with your actual Gemini API key
       GEMINI_API_KEY: ""
+
+  - id: dora_string_publisher
+    build: cargo build -p dora_string_publisher
+    path: ../../target/debug/dora_string_publisher
+    inputs:
+    outputs:
+      - submitted_string # [string]
 
   - id: rerun-viz
     build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-rerun&subdirectory=node-hub/dora-rerun

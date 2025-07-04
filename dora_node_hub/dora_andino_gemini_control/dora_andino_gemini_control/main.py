@@ -25,9 +25,7 @@ def main() -> None:
     # Required node configuration
     command = os.getenv("COMMAND", "")
     if not command:
-        raise ValueError(
-            "COMMAND environment variable is not set. Please provide a command."
-        )
+        print("COMMAND environment variable is not set. Using command via input event.")
     # Optional node configuration
     model = os.getenv("MODEL", "gemini-2.0-flash-lite")
 
@@ -82,6 +80,8 @@ def main() -> None:
             if event_id == "tick":
                 if last_image is None:
                     continue
+                if command == "":
+                    continue
                 image_bytes = last_image.tobytes()
 
                 # Dump image into a file for debugging
@@ -121,6 +121,12 @@ def main() -> None:
                     data=pa.array(cmd_vel.tolist(), type=pa.float64()),
                     metadata=event["metadata"],
                 )
+            if event_id == "command":
+                command = str(event["value"])
+                print(f"Received command: {command}")
+                if command == "":
+                    print("Command is empty. Waiting for next input event.")
+                    continue
 
 
 if __name__ == "__main__":
