@@ -1,5 +1,5 @@
 [package]
-name = "dora_string_publisher"
+name = "dora_string_publisher_ui"
 version = "0.1.0"
 edition = "2021"
 

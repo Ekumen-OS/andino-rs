@@ -10,7 +10,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     eframe::run_native(
         "Dora Text Publisher",
         options,
-        Box::new(|cc| Ok(Box::new(dora_string_publisher::DoraUITextPublisher::new(cc, &mut node)))),
+        Box::new(|cc| {
+            Ok(Box::new(dora_string_publisher_ui::DoraUITextPublisher::new(
+                cc, &mut node,
+            )))
+        }),
     )
     .map_err(|e| {
         eprintln!("Error running eframe application: {}", e);

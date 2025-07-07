@@ -51,20 +51,20 @@ nodes:
       cmd_vel_tick: dora/timer/millis/100 # 10 Hz
       tick: dora/timer/millis/100 # 10 Hz
       image: camera/image
-      command: dora_string_publisher/submitted_string
+      command: dora_string_publisher_ui/submitted_string
     outputs:
       - cmd_vel # [linear_vel, 0, 0, 0, 0, angular_vel]
     env:
-      # COMMAND: # Not using this environment variable, instead we are using the dora_string_publisher node to provide the command.
+      # COMMAND: # Not using this environment variable, instead we are using the dora_string_publisher_ui node to provide the command.
       MODEL: "gemini-2.5-flash" # e.g: "gemini-2.0-flash-lite"
       # MODEL: "gemini-2.5-flash-lite-preview-06-17" # e.g: "gemini-2.0-flash-lite"
       # MODEL: "gemini-2.5-flash-lite-preview-06-17" # e.g: "gemini-2.0-flash-lite"
       # Replace with your actual Gemini API key
       GEMINI_API_KEY: ""
 
-  - id: dora_string_publisher
-    build: cargo build -p dora_string_publisher
-    path: ../../target/debug/dora_string_publisher
+  - id: dora_string_publisher_ui
+    build: cargo build -p dora_string_publisher_ui
+    path: ../../target/debug/dora_string_publisher_ui
     inputs:
     outputs:
       - submitted_string # [string]
