@@ -18,6 +18,11 @@ def start_event_loop(loop: asyncio.AbstractEventLoop) -> None:
     loop.run_forever()
 
 
+def zero_twist() -> np.ndarray:
+    """Create a zero twist array."""
+    return np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=np.float64)
+
+
 def main() -> None:
     """TODO: Add docstring."""
     node = Node()
@@ -29,12 +34,11 @@ def main() -> None:
     # Optional node configuration
     model = os.getenv("MODEL", "gemini-2.0-flash-lite")
 
-    # Initialize the controller with the specified model
+    # Initialize the controller with the specified model.
     controller = DiffDriveGeminiControl(model=model)
     last_image = None
-    cmd_vel = np.array(
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=np.float64
-    )  # Initialize cmd_vel with zeros
+    # Initialize cmd_vel with zero velocity.
+    cmd_vel = zero_twist()
 
     # Setup for the background event loop thread
     loop = asyncio.new_event_loop()
@@ -81,12 +85,13 @@ def main() -> None:
                 if last_image is None:
                     continue
                 if command == "":
+                    cmd_vel = zero_twist()
                     continue
                 image_bytes = last_image.tobytes()
 
-                # Dump image into a file for debugging
-                with open("last_image.png", "wb") as f:
-                    f.write(last_image)
+                # For debugging: Dump image into a file for debugging
+                # with open("last_image.png", "wb") as f:
+                #    f.write(last_image)
 
                 velocities = None
                 if (
@@ -99,6 +104,14 @@ def main() -> None:
                     except Exception as e:
                         print(f"❌ ERROR from velocities generation: {e}")
                     generated_velocities_future = None
+                    print(f"Velocities generation future done: {velocities}")
+                    if command.lower() == "stop" and (
+                        np.all(velocities == zero_twist())
+                    ):
+                        # To avoid keeping generating velocities in the next iteration when the command is "stop",
+                        # we update the command to an empty string.
+                        command = ""
+
                 elif generated_velocities_future is None:
                     # Velocities generation has not been run yet. Scheduling it now.
                     generated_velocities_future = asyncio.run_coroutine_threadsafe(
@@ -113,7 +126,6 @@ def main() -> None:
                     continue
 
                 last_image = None
-                print(f"Generated velocities: {velocities}")
                 cmd_vel = velocities
             if event_id == "cmd_vel_tick":
                 node.send_output(
@@ -122,7 +134,23 @@ def main() -> None:
                     metadata=event["metadata"],
                 )
             if event_id == "command":
-                command = str(event["value"])
+                value = event["value"]
+                # value is a pa.array of type pa.string()
+                if not isinstance(value, pa.Array):
+                    raise RuntimeError(
+                        f"Expected value to be a pyarrow Array, got {type(value)}"
+                    )
+                if value.type != pa.string():
+                    raise RuntimeError(
+                        f"Expected value to be a pyarrow string Array, got {value.type}"
+                    )
+                value = value.to_pylist()
+                if len(value) > 1:
+                    raise RuntimeError(
+                        f"Expected value to be a single string, got {value.len()} strings"
+                    )
+                command = str(value[0])
+
                 print(f"Received command: {command}")
                 if command == "":
                     print("Command is empty. Waiting for next input event.")
