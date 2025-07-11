@@ -6,6 +6,7 @@ members = [
   "andino_dora_sim",
   "dora_node_hub/dora_andino_hal",
   "dora_node_hub/dora_diff_drive_controller",
+  "dora_node_hub/dora_string_publisher_ui",
   "dora_node_hub/dora_teleop_keyboard",
 ]
 

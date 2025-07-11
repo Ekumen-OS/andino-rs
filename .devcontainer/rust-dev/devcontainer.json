@@ -24,7 +24,8 @@
                 "yzhang.markdown-all-in-one",
                 "tamasfe.even-better-toml",
                 "ritwickdey.liveserver",
-                "ms-python.python"
+                "ms-python.python",
+                "ms-python.vscode-pylance"
             ]
         }
     },

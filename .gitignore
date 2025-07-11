@@ -17,3 +17,15 @@ sandbox
 
 # datasets of yolo
 *.pt
+
+# Python compiled files
+dist
+*.egg-info
+.venv
+__pycache__
+*.pyc
+*.ruff_cache
+*.pytest_cache
+
+# MuJoCo outputs
+*.mp4
