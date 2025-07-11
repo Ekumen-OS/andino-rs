@@ -36,18 +36,18 @@ uv run pytest . # Test
 ## YAML Specification
 
 ### inputs
-  - tick: Rate at which the control loop is attempted to be run.
-  - cmd_vel_tick: Rate at which the command velocity should be published.
-  - image: Camera image to be used as input for the prompt.
-  - command: Command to be prompted to Gemini's API.
+  - `tick`: Rate at which the control loop is attempted to be run.
+  - `cmd_vel_tick`: Rate at which the command velocity should be published.
+  - `image`: Camera image to be used as input for the prompt.
+  - `command`: Command to be prompted to Gemini's API.
 
 ### outputs
-  - cmd_vel: Velocity command to be forwarded to a differential drive controller.
+  - `cmd_vel`: Velocity command to be forwarded to a differential drive controller.
 
 ### envs
-  - COMMAND: Optional static command. You can use always this command if no *command* is set as *input*. If both (*COMMAND* env and *command* input) are set, this would act as initial command and then be replaced by the input.
-  - MODEL: One of the valid Gemini models. (E.g: gemini-2.5-flash)
-  - GEMINI_API_KEY: Gemini API Key to be used for interacting with the API.
+  - `COMMAND`: Optional static command. You can use always this command if no *command* is set as *input*. If both (*COMMAND* env and *command* input) are set, this would act as initial command and then be replaced by the input.
+  - `MODEL`: One of the valid Gemini models. (E.g: gemini-2.5-flash). Visit [ai.google.dev](https://ai.google.dev/gemini-api/docs) for more info.
+  - `GEMINI_API_KEY`: Gemini API Key to be used for interacting with the API.
 
 ## Examples
 

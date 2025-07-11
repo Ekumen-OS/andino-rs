@@ -79,9 +79,9 @@ end
   dora_andino_mujoco_sim -- camera_image as image --> rerun-viz
 ```
 
-Runs a dataflow that uses [Gemini](https://gemini.google.com/app) API for navigating the Andino based on user inputs.
+Runs a dataflow that uses [Gemini](https://gemini.google.com/app) API to provide navigation capabilities to Andino.
 
-1. Obtain a [Gemini API Key](https://aistudio.google.com/apikey) and add it as environment variable to the correspondent node in the [mujoco_sim_gemini_navigation.yml](graphs/mujoco_sim_gemini_navigation.yml) dataflow.
+1. Obtain a [Gemini API Key](https://aistudio.google.com/apikey) and add it as an environment variable to the corresponding node in the [mujoco_sim_gemini_navigation.yml](graphs/mujoco_sim_gemini_navigation.yml) dataflow.
 
 2. Build the dataflow:
 ```
@@ -93,4 +93,4 @@ dora build graphs/mujoco_sim_gemini_navigation.yml
 dora run graphs/mujoco_sim_gemini_navigation.yml
 ```
 
-4. Use the GUI to input a command to be followed by the Andino.
+4. Use the GUI to issue a command for Andino to execute.
