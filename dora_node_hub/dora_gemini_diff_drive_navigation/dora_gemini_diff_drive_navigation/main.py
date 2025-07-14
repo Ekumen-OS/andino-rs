@@ -2,7 +2,6 @@
 
 import asyncio
 import os
-import threading
 from typing import Dict
 
 import cv2 as cv
@@ -63,8 +62,8 @@ def image_data_to_png(image_data: pa.UInt8Array, metadata: Dict[str, str]) -> by
     return frame.tobytes()  # type: ignore[no-any-return]
 
 
-def main() -> None:
-    """TODO: Add docstring."""
+async def main() -> None:
+    """Main function to run the dora_gemini_diff_drive_navigation node."""
     node = Node()
 
     # Required node configuration
@@ -80,14 +79,8 @@ def main() -> None:
     # Initialize cmd_vel with zero velocity.
     cmd_vel = zero_twist()
 
-    # Setup for the background event loop thread
-    loop = asyncio.new_event_loop()
-    thread = threading.Thread(target=start_event_loop, args=(loop,), daemon=True)
-    thread.start()
-
-    generated_velocities_future = None
-
-    for event in node:
+    while True:
+        event = await node.recv_async()
         event_type = event["type"]
         if event_type == "INPUT":
             event_id = event["id"]
@@ -107,33 +100,16 @@ def main() -> None:
                 # with open("last_image.png", "wb") as f:
                 #    f.write(last_image)
 
-                velocities = None
-                if generated_velocities_future is not None and generated_velocities_future.done():
-                    # Velocities generation has finished. Retrieving result...
-                    try:
-                        velocities = generated_velocities_future.result()
-                    except Exception as e:
-                        print(f"Error from velocities generation: {e}")
-                    generated_velocities_future = None
-                    print(f"Velocities generation future done: {velocities}")
-                    if command.lower() == "stop" and (np.all(velocities == zero_twist())):
-                        # To avoid keeping generating velocities in the next iteration when the command is "stop",
-                        # we update the command to an empty string.
-                        command = ""
-
-                elif generated_velocities_future is None:
-                    # Velocities generation has not been run yet. Scheduling it now.
-                    generated_velocities_future = asyncio.run_coroutine_threadsafe(
-                        controller.generate_velocities(command=command, image_bytes=image_bytes),
-                        loop,
-                    )
-                    continue
-                else:
-                    # Velocities generation is still in progress. Continue...
-                    continue
-
+                generated_velocities_result = await controller.generate_velocities(
+                    command=command, image_bytes=image_bytes
+                )
+                print(f"Generated velocities: {generated_velocities_result}")
+                if command.lower() == "stop" and (np.all(generated_velocities_result == zero_twist())):
+                    # To avoid keeping generating velocities in the next iteration when the command is "stop",
+                    # we update the command to an empty string.
+                    command = ""
                 last_image = None
-                cmd_vel = velocities
+                cmd_vel = generated_velocities_result
             if event_id == "cmd_vel_tick":
                 node.send_output(
                     "cmd_vel",
@@ -158,5 +134,5 @@ def main() -> None:
                     continue
 
 
-if __name__ == "__main__":
-    main()
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
