@@ -3,6 +3,7 @@
 import asyncio
 import os
 import threading
+from typing import Dict
 
 import cv2 as cv
 import numpy as np
@@ -21,6 +22,45 @@ def start_event_loop(loop: asyncio.AbstractEventLoop) -> None:
 def zero_twist() -> np.ndarray:
     """Create a zero twist array."""
     return np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=np.float64)
+
+
+def image_data_to_png(image_data: pa.UInt8Array, metadata: Dict[str, str]) -> bytes:
+    """Convert image data from pyarrow UInt8Array to PNG format.
+
+    The metadata should contain the encoding, width, and height of the image.
+    For reference, this method can be used to convert images
+    sent by https://github.com/dora-rs/dora/tree/main/node-hub/opencv-video-capture dora node.
+
+    Args:
+        image_data (pa.UInt8Array): The image data as a pyarrow UInt8Array
+        metadata (dict): Metadata containing 'encoding', 'width', and 'height'.
+
+    Returns:
+        bytes: The image data in PNG format.
+
+    """
+    encoding = metadata["encoding"]
+    width = metadata["width"]
+    height = metadata["height"]
+    if encoding in {"bgr8", "rgb8"}:
+        channels = 3
+        storage_type = np.uint8
+    else:
+        raise RuntimeError(f"Unsupported image encoding: {encoding}")
+
+    frame = image_data.to_numpy().astype(storage_type).reshape((height, width, channels))
+    if encoding == "bgr8":
+        pass
+    elif encoding == "rgb8":
+        frame = frame[:, :, ::-1]  # Convert RGB to BGR
+    else:
+        raise RuntimeError(f"Unsupported image encoding: {encoding}")
+
+    # Convert the frame to png
+    ret, frame = cv.imencode(".png", frame)
+    if not ret:
+        raise RuntimeError("Failed to encode image to PNG format.")
+    return frame.tobytes()  # type: ignore[no-any-return]
 
 
 def main() -> None:
@@ -54,36 +94,14 @@ def main() -> None:
             if event_id == "image":
                 storage = event["value"]
                 metadata = event["metadata"]
-                encoding = metadata["encoding"]
-                width = metadata["width"]
-                height = metadata["height"]
-
-                if encoding in {"bgr8", "rgb8"}:
-                    channels = 3
-                    storage_type = np.uint8
-                else:
-                    raise RuntimeError(f"Unsupported image encoding: {encoding}")
-
-                frame = storage.to_numpy().astype(storage_type).reshape((height, width, channels))
-                if encoding == "bgr8":
-                    pass
-                elif encoding == "rgb8":
-                    frame = frame[:, :, ::-1]  # Convert RGB to BGR
-                else:
-                    raise RuntimeError(f"Unsupported image encoding: {encoding}")
-
-                # Convert the frame to png
-                ret, frame = cv.imencode(".png", frame)
-                if not ret:
-                    raise RuntimeError("Failed to encode image to PNG format.")
-                last_image = frame
+                last_image = image_data_to_png(storage, metadata)
             if event_id == "tick":
                 if last_image is None:
                     continue
                 if command == "":
                     cmd_vel = zero_twist()
                     continue
-                image_bytes = last_image.tobytes()
+                image_bytes = last_image
 
                 # For debugging: Dump image into a file for debugging
                 # with open("last_image.png", "wb") as f:
