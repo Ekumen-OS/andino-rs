@@ -56,8 +56,8 @@ def image_data_to_png(image_data: pa.UInt8Array, metadata: Dict[str, str]) -> by
     return frame.tobytes()  # type: ignore[no-any-return]
 
 
-async def main() -> None:
-    """Main function to run the dora_gemini_diff_drive_navigation node."""
+async def async_main() -> None:
+    """Asnynchronous main function for the dora_gemini_diff_drive_navigation node."""
     node = Node()
 
     # Required node configuration
@@ -128,5 +128,7 @@ async def main() -> None:
                     continue
 
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+def main() -> None:
+    """Main function for the dora_gemini_diff_drive_navigation node."""
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(async_main())
