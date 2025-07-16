@@ -12,12 +12,6 @@ from dora import Node
 from dora_gemini_diff_drive_navigation.controller import DiffDriveGeminiControl
 
 
-def start_event_loop(loop: asyncio.AbstractEventLoop) -> None:
-    """Starts the asyncio event loop in the background thread."""
-    asyncio.set_event_loop(loop)
-    loop.run_forever()
-
-
 def zero_twist() -> np.ndarray:
     """Create a zero twist array."""
     return np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=np.float64)

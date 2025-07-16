@@ -96,7 +96,7 @@ end
   camera -- image --> rerun-viz
 ```
 
-Runs a dataflow that uses [Gemini](https://gemini.google.com/app) API to provide navigation capabilities to Andino.
+Runs a dataflow that uses [Google's Gemini](https://gemini.google.com/app) API to provide navigation capabilities to Andino.
 
 1. Obtain a [Gemini API Key](https://aistudio.google.com/apikey) and add it as an environment variable to the corresponding node in the [gemini_navigation.yml](graphs/gemini_navigation.yml) dataflow.
 

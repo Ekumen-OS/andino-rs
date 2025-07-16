@@ -47,7 +47,7 @@ For simulation, refer to [workspace setup](#workspace-setup) instructions.
    -  [`dora_andino_hal`](dora_node_hub/dora_andino_hal): Integration of the andino hal with Dora.
    -  [`dora_andino_mujoco_sim`](dora_node_hub/dora_andino_mujoco_sim): Integration of the andino mujoco simulation with Dora.
    -  [`dora_diff_drive_controller`](dora_node_hub/dora_diff_drive_controller): Differential drive controller to be used in Dora frameworks.
-   -  [`dora_gemini_diff_drive_navigation`](dora_node_hub/dora_gemini_diff_drive_navigation): Uses Google's LLM Gemini to navigate a differential drive robot.
+   -  [`dora_gemini_diff_drive_navigation`](dora_node_hub/dora_gemini_diff_drive_navigation): Uses Google's Gemini LLM to navigate a differential drive robot.
    -  [`dora_string_publisher_ui`](dora_node_hub/dora_string_publisher_ui): Creates a GUI for the user to publish an arbitrary string on demand.
    -  [`dora_teleop_keyboard`](dora_node_hub/dora_teleop_keyboard): Dora node for teleoperating mobile robots using the keyboard.
 

@@ -45,7 +45,7 @@ uv run pytest . # Test
   - `cmd_vel`: Velocity command to be forwarded to a differential drive controller.
 
 ### envs
-  - `COMMAND`: Optional static command. You can use always this command if no *command* is set as *input*. If both (*COMMAND* env and *command* input) are set, this would act as initial command and then be replaced by the input.
+  - `COMMAND`: Optional static command. You can use this command if no *command* is set as *input*. If both (*COMMAND* env and *command* input) are set, this would act as initial command and then be replaced by the input.
   - `MODEL`: One of the valid Gemini models. (E.g: gemini-2.5-flash). Visit [ai.google.dev](https://ai.google.dev/gemini-api/docs) for more info.
   - `GEMINI_API_KEY`: Gemini API Key to be used for interacting with the API.
 
