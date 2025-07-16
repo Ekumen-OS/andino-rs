@@ -87,9 +87,7 @@ Check [`andino_dora`'s README](andino_dora) for more information on how to run i
 
 ### `andino_dora_sim` package
 
-<p align="center">
-  <img src="docs/mujoco_sim.png" width=800 />
-</p>
+https://github.com/user-attachments/assets/6b650742-9ae8-4842-98ac-2677470bc311
 
 [`andino_dora_sim`](andino_dora_sim) package provides serveral dora dataflows for using simulations instead of the real robot to speed up development or if you don't have an *andino* built yet.
 

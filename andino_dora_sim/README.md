@@ -53,6 +53,8 @@ dora run graphs/mujoco_sim.yml
 
 ### mujoco_sim_gemini_navigation.yml
 
+https://github.com/user-attachments/assets/6b650742-9ae8-4842-98ac-2677470bc311
+
 ```mermaid
         flowchart TB
   dora_andino_mujoco_sim["**dora_andino_mujoco_sim**"]
