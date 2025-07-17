@@ -3,6 +3,7 @@
 
     <include file="andino/andino.xml"/>
     <include file="office/table.xml"/>
+    <include file="office/props.xml"/>
     <include file="office/hq4_office.xml"/>
 
     <worldbody>

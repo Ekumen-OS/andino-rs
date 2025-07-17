@@ -1,0 +1,88 @@
+nodes:
+  # Node that loads the HAL for the Andino robot.
+  - id: dora_andino_hal
+    build: cargo build -p dora_andino_hal
+    path: ../../target/debug/dora_andino_hal
+    inputs:
+      tick: dora/timer/millis/100
+      joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
+    outputs:
+      - wheel_joint_positions # [left, right]
+      - wheel_joint_velocities # [left, right]
+    env:
+      # Serial port name.
+      SERIAL_DEVICE: /dev/ttyUSB0
+      # Baud rate for the serial port.
+      BAUD_RATE: 57600
+      # Number of encoder ticks per revolution for the motors.
+      MOTOR_TICKS_PER_REVOLUTION: 585
+      # Timeout for the serial port communication in milliseconds.
+      TIMEOUT: 3000
+
+  # Differential drive controller node.
+  # This node takes the input command velocity (cmd_vel) [linear and angular velocity] and converts it to joint speed commands [rad/s] for the left and right wheels.
+  - id: dora_diff_drive_controller
+    build: cargo build -p dora_diff_drive_controller
+    path: ../../target/debug/dora_diff_drive_controller
+    inputs:
+      cmd_vel: dora_gemini_diff_drive_navigation/cmd_vel
+    outputs:
+      - joints_speed_cmd # [left, right]
+    env:
+      WHEEL_RADIUS: 0.0315 # [m]
+      WHEEL_SEPARATION: 0.137 # [m]
+
+  - id: camera
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=opencv-video-capture&subdirectory=node-hub/opencv-video-capture
+    path: opencv-video-capture
+    inputs:
+      tick: dora/timer/millis/100
+    outputs:
+      - image
+    env:
+      CAPTURE_PATH: /dev/video0
+      IMAGE_WIDTH: 640
+      IMAGE_HEIGHT: 480
+
+  - id: dora_gemini_diff_drive_navigation
+    build: pip install -e ../../dora_node_hub/dora_gemini_diff_drive_navigation
+    path: dora_gemini_diff_drive_navigation
+    inputs:
+      cmd_vel_tick: dora/timer/millis/100 # 10 Hz
+      tick: dora/timer/millis/100 # 10 Hz
+      image: camera/image
+      command: dora_string_publisher_ui/submitted_string
+    outputs:
+      - cmd_vel # [linear_vel, 0, 0, 0, 0, angular_vel]
+    env:
+      # COMMAND: # Not using this environment variable, instead we are using the dora_string_publisher_ui node to provide the command.
+      MODEL: "gemini-2.5-flash" # e.g: "gemini-2.0-flash-lite"
+      # MODEL: "gemini-2.5-flash-lite-preview-06-17" # e.g: "gemini-2.0-flash-lite"
+      # MODEL: "gemini-2.5-flash-lite-preview-06-17" # e.g: "gemini-2.0-flash-lite"
+      # Replace with your actual Gemini API key
+      GEMINI_API_KEY: ""
+
+  - id: dora_string_publisher_ui
+    build: cargo build -p dora_string_publisher_ui
+    path: ../../target/debug/dora_string_publisher_ui
+    inputs:
+    outputs:
+      - submitted_string # [string]
+
+  - id: rerun-viz
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-rerun&subdirectory=node-hub/dora-rerun
+    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-rerun
+    path: dora-rerun
+    inputs:
+      image: camera/image
+    env:
+      # Connects and sends the logged data to a remote Rerun viewer
+      # You can set it to 'SPAWN' if you want to run the viewer locally, however
+      # the SBC (in this case the Raspberry Pi) needs to b able to support
+      # the Rerun viewer GUI (GPU support).
+      OPERATING_MODE: CONNECT
+      # Replace with your Rerun server address
+      # Run the rerun server viewer with:
+      #  rerun --serve --web-viewer --bind 192.168.1.107
+      # Open the browser and go to http://192.168.1.107:9090/?url=ws://192.168.1.107:9877 to see the viewer.
+      RERUN_SERVER_ADDR: 192.168.1.107:9876
