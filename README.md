@@ -32,6 +32,32 @@ For the real robot, refer to official instructions on [building an andino](https
 
 For simulation, refer to [workspace setup](#workspace-setup) instructions.
 
+## Quickstart
+
+### Simulation
+
+1. Refer to [workspace setup](#workspace-setup) to set up the docker environment.
+2. Inside the container build the systems: 
+```
+  cargo build
+  uv build --all-packages
+```
+3. Build the dataflow:
+```
+dora build graphs/mujoco_sim_gemini_navigation.yml
+```
+
+4. Run the dataflow locally:
+```
+dora run graphs/mujoco_sim_gemini_navigation.yml
+```
+
+**Note:** For more information about the simulation, refer to [`andino_dora_sim`'s README](andino_dora_sim)
+
+### Andino hardware
+
+TBD
+
 ## Platforms
 
  - OS:
