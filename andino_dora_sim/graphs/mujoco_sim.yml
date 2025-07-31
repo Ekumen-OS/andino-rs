@@ -33,7 +33,7 @@ nodes:
 
   # Node that reads the keyboard input and outputs the character pressed.
   - id: dora_keyboard
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-keyboard&subdirectory=node-hub/dora-keyboard
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=dora-keyboard&subdirectory=node-hub/dora-keyboard
     path: dora-keyboard
     outputs:
       - char
@@ -52,7 +52,7 @@ nodes:
 
   # Run yolo object detection on the camera image.
   - id: object-detection
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-yolo&subdirectory=node-hub/dora-yolo
+    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=dora-yolo&subdirectory=node-hub/dora-yolo
     path: dora-yolo
     inputs:
       image: dora_andino_mujoco_sim/camera_image
@@ -60,12 +60,12 @@ nodes:
       - bbox
 
   # Visualize the camera image and the detected bounding boxes in Rerun.
-  - id: rerun-viz
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-rerun&subdirectory=node-hub/dora-rerun
-    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-rerun
-    path: dora-rerun
-    inputs:
-      image: dora_andino_mujoco_sim/camera_image
-      boxes2d: object-detection/bbox
-    env:
-      OPERATING_MODE: SPAWN
+  # - id: rerun-viz
+  #   build: pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=dora-rerun&subdirectory=node-hub/dora-rerun
+  #   # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.12 dora-rerun
+  #   path: dora-rerun
+  #   inputs:
+  #     image: dora_andino_mujoco_sim/camera_image
+  #     boxes2d: object-detection/bbox
+  #   env:
+  #     OPERATING_MODE: SPAWN
