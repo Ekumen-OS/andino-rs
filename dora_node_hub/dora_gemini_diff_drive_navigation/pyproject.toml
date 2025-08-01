@@ -8,7 +8,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 
 dependencies = [
-  "dora-rs >= 0.3.9",
+  "dora-rs == 0.3.12",
   "google-genai >= 1.23.0",
   "numpy >= 1.26.4",
   "opencv-python >= 4.1.1",

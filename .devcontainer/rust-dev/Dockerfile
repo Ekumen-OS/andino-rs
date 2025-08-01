@@ -16,36 +16,22 @@ ARG RUST_VERSION=1.86.0
 ################################################################################
 
 ARG USERNAME=dev
+ARG UID=1000
+ARG GID=1000
 
-# Automatically creates a UID, group ${USERNAME}, adds ${USERNAME} to the group
-#
-# NB: If using this image as a base for a devcontainer, it is critical to have
-# just one user, since dynamic UID mapping will not work otherwise, refer to:
-#   https://github.com/microsoft/vscode-remote-release/issues/1155
-#
-RUN useradd -o --uid 1000 -s "/bin/bash" -m ${USERNAME} && \
+RUN groupadd -o --gid ${GID} ${USERNAME}
+RUN useradd -o --uid ${UID} --gid ${GID} -s "/bin/bash" -m ${USERNAME} && \
     apt-get install -y sudo && \
     echo "${USERNAME} ALL=NOPASSWD: ALL" > /etc/sudoers.d/${USERNAME} && \
     chmod 0440 /etc/sudoers.d/${USERNAME}
 
 RUN usermod -a -G dialout $USERNAME
 
-COPY rust-dev/dev.bashrc /home/${USERNAME}/.bashrc.d/dev.bashrc
+COPY .devcontainer/rust-dev/dev.bashrc /home/${USERNAME}/.bashrc.d/dev.bashrc
 RUN echo "source /home/${USERNAME}/.bashrc.d/dev.bashrc" >> /home/${USERNAME}/.bashrc
 
 RUN mkdir -p /home/${USERNAME}/.local/share/bash-completion/completions/ && \
     chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.local
-
-# Debugging with root.
-
-COPY rust-dev/dev.bashrc ${HOME}/.bashrc.d/dev.bashrc
-RUN echo "source ${HOME}/.bashrc.d/dev.bashrc" >> ${HOME}/.bashrc
-
-################################################################################
-# Unset gcr configured ubuntu user
-################################################################################
-
-USER root
 
 ################################################################################
 # Tools & Utilities
@@ -124,7 +110,7 @@ RUN pip install --upgrade pip
 RUN cargo install \
     # Depending on binary crates doesn't allow you to use them from cli.
     # https://github.com/rust-lang/cargo/issues/2267
-    dora-cli
+    dora-cli --version 0.3.12
 
 # The previous commands roots permissions in ${CARGO_HOME} and ${RUSTUP_HOME}.
 # Establish wide permissions for user 'dev'. This step takes several minutes.
@@ -133,32 +119,14 @@ RUN find ${CARGO_HOME} -type d -exec chmod 777 {} + && \
     find ${RUSTUP_HOME} -type d -exec chmod 777 {} + && \
     find ${RUSTUP_HOME} -type f -exec chmod a+rw {} +
 
-################################################################################
-# Pre install dora nodes
-################################################################################
-
-RUN mkdir -p /home/${USERNAME}/.dora && \
-    chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.dora && \
-    chmod 777 /home/${USERNAME}/.dora
-RUN git clone --depth 1 --branch v0.3.11 --single-branch https://github.com/dora-rs/dora.git /home/${USERNAME}/.dora/dora && \
-    pip install /home/${USERNAME}/.dora/dora/node-hub/dora-keyboard && \
-    pip install /home/${USERNAME}/.dora/dora/node-hub/dora-rerun && \
-    pip install /home/${USERNAME}/.dora/dora/node-hub/dora-yolo && \
-    pip install /home/${USERNAME}/.dora/dora/node-hub/opencv-video-capture
+USER ${USERNAME}
 
 ################################################################################
 # Python dev install
 ################################################################################
 
 # Install uv package manager: https://github.com/astral-sh/uv
-RUN pip install uv
-
-################################################################################
-# MuJoCo installation
-################################################################################
-
-ENV MUJOCO_VERSION=3.2.6
-RUN pip install mujoco==${MUJOCO_VERSION}
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ################################################################################
 # NVIDIA

@@ -23,7 +23,7 @@ pub fn main() -> eyre::Result<()> {
 
     while let Some(event) = events.recv() {
         match event {
-            Event::Stop => {
+            Event::Stop(_) => {
                 println!("Received stop event");
                 break;
             }

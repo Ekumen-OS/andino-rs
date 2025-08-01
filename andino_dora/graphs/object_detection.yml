@@ -1,6 +1,6 @@
 nodes:
   - id: camera
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=opencv-video-capture&subdirectory=node-hub/opencv-video-capture
+    build: uv pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=opencv-video-capture&subdirectory=node-hub/opencv-video-capture
     path: opencv-video-capture
     inputs:
       tick: dora/timer/millis/100
@@ -12,7 +12,7 @@ nodes:
       IMAGE_HEIGHT: 480
 
   - id: object-detection
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-yolo&subdirectory=node-hub/dora-yolo
+    build: uv pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=dora-yolo&subdirectory=node-hub/dora-yolo
     path: dora-yolo
     inputs:
       image: camera/image
@@ -20,8 +20,8 @@ nodes:
       - bbox
 
   - id: rerun-viz
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-rerun&subdirectory=node-hub/dora-rerun
-    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-rerun
+    build: uv pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=dora-rerun&subdirectory=node-hub/dora-rerun
+    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.12 dora-rerun
     path: dora-rerun
     inputs:
       image: camera/image

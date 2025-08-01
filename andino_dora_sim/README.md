@@ -48,7 +48,7 @@ dora build graphs/mujoco_sim.yml
 
 Run the dataflow locally:
 ```
-dora run graphs/mujoco_sim.yml
+dora run graphs/mujoco_sim.yml -uv
 ```
 
 ### mujoco_sim_gemini_navigation.yml
@@ -92,7 +92,7 @@ dora build graphs/mujoco_sim_gemini_navigation.yml
 
 3. Run the dataflow locally:
 ```
-dora run graphs/mujoco_sim_gemini_navigation.yml
+dora run graphs/mujoco_sim_gemini_navigation.yml -uv
 ```
 
 4. Use the GUI to issue a command for Andino to execute.

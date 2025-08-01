@@ -34,7 +34,7 @@ nodes:
 
   # Node that reads the keyboard input and outputs the character pressed.
   - id: dora_keyboard
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-keyboard&subdirectory=node-hub/dora-keyboard
+    build: uv pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=dora-keyboard&subdirectory=node-hub/dora-keyboard
     path: dora-keyboard
     outputs:
       - char
@@ -53,7 +53,7 @@ nodes:
 
   # - id: dora-record
   #   custom:
-  #     build: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-record
+  #     build: cargo install --git https://github.com/dora-rs/dora --tag v0.3.12 dora-record
   #     source: dora-record
   #     inputs:
   #       wheel_joint_positions: dora_andino_hal/wheel_joint_positions

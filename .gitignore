@@ -29,3 +29,6 @@ __pycache__
 
 # MuJoCo outputs
 *.mp4
+
+# uv cache
+.uv_cache

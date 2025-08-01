@@ -30,7 +30,7 @@ to know more about *andino* and its ecosystem.
 
 For the real robot, refer to official instructions on [building an andino](https://github.com/Ekumen-OS/andino/tree/humble/andino_hardware).
 
-For simulation, refer to [workspace setup](#workspace-setup) instructions.
+For simulation, refer to [workspace setup](#pick-workspace-setup) instructions.
 
 ## Platforms
 
@@ -62,10 +62,19 @@ Refer to [.devcontainer/README.md](.devcontainer/README.md)
 
 This repository combines both `rust` and `python` packages. `cargo` and `uv` are the tools of choice.
 
+#### Rust packages
+
  - Building `rust` packages:
     ```
     cargo build
     ```
+
+#### Python packages
+ - Setup a `venv` within `andino-rs` folder.
+    ```
+    uv venv -p 3.11 --seed
+    ```
+
  - Building `python` packages:
     ```
     uv build --all-packages

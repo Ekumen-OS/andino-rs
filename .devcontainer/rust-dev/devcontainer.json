@@ -1,11 +1,15 @@
 {
     "name": "andino-rs dev",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".."
-    },
+    // This is a workaround for the limitation of not being able to run $(id -u) in devcontainer.json
+    // so as to pass it to the build context via "build" dictionary.
+    // We are here using initializeCommand to run a script that builds the image with the correct UID and GID.
+    "initializeCommand": [".devcontainer/rust-dev/initialize_command.sh"],
+    "image": "andino-rs-dev-container",
     "containerEnv": {
-      "DISPLAY": "${localEnv:DISPLAY}"
+      "DISPLAY": "${localEnv:DISPLAY}",
+      // Guarantee that the uv cache is in the same filesystem as the workspace
+      // to avoid copies.
+      "UV_CACHE_DIR": "${containerWorkspaceFolder}/.uv_cache"
     },
     "mounts": [
       "type=bind,source=/dev,target=/dev",

@@ -53,7 +53,7 @@ uv run pytest . # Test
 
 ```yml
   - id: dora_gemini_diff_drive_navigation
-    build: pip install -e ../../dora_node_hub/dora_gemini_diff_drive_navigation
+    build: uv pip install -e ../../dora_node_hub/dora_gemini_diff_drive_navigation
     path: dora_gemini_diff_drive_navigation
     inputs:
       tick: dora/timer/millis/100

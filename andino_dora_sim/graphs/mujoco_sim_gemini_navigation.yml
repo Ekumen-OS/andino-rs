@@ -2,7 +2,7 @@ nodes:
   # Loads andino simulation in MuJoCo. This replaces the andino HAL with a simulated version.
   # If we were to replace this node with dora_andino_hal node, it should be able to run the dataflow.
   - id: dora_andino_mujoco_sim
-    build: pip install -e ../../dora_node_hub/dora_andino_mujoco_sim
+    build: uv pip install -e ../../dora_node_hub/dora_andino_mujoco_sim
     path: dora_andino_mujoco_sim
     inputs:
       viewer_tick: dora/timer/millis/17 # ~60 Hz
@@ -33,8 +33,8 @@ nodes:
 
   # Visualize the camera image
   - id: rerun-viz
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-rerun&subdirectory=node-hub/dora-rerun
-    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-rerun
+    build: uv pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=dora-rerun&subdirectory=node-hub/dora-rerun
+    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.12 dora-rerun
     path: dora-rerun
     inputs:
       image: dora_andino_mujoco_sim/camera_image
@@ -42,7 +42,7 @@ nodes:
       OPERATING_MODE: SPAWN
 
   - id: dora_gemini_diff_drive_navigation
-    build: pip install -e ../../dora_node_hub/dora_gemini_diff_drive_navigation
+    build: uv pip install -e ../../dora_node_hub/dora_gemini_diff_drive_navigation
     path: dora_gemini_diff_drive_navigation
     inputs:
       tick: dora/timer/millis/100
