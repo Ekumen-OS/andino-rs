@@ -32,7 +32,7 @@ dora build graphs/dataflow.yml
 
 Run the dataflow locally:
 ```
-dora run graphs/dataflow.yml -uv
+dora run graphs/dataflow.yml --uv
 ```
 
 ### object_detection.yml
@@ -62,7 +62,7 @@ dora build graphs/object_detection.yml
 
 Run the dataflow locally:
 ```
-dora run graphs/object_detection.yml -uv
+dora run graphs/object_detection.yml --uv
 ```
 
 Run the Rerun server locally (not on the andino):
@@ -107,7 +107,7 @@ dora build graphs/gemini_navigation.yml
 
 3. Run the dataflow locally:
 ```
-dora run graphs/gemini_navigation.yml -uv
+dora run graphs/gemini_navigation.yml --uv
 ```
 
 4. Run the Rerun server locally (not on the *andino*):
