@@ -80,12 +80,13 @@ def main() -> None:
                         # - wheel_joint_positions
                         # - wheel_joint_velocities
                         wheel_joint_positions = [
-                            mj_data.qpos[0],
-                            mj_data.qpos[1],
+                            mj_data.joint("left_wheel_joint").qpos[0],
+                            mj_data.joint("right_wheel_joint").qpos[0],
                         ]
+
                         wheel_joint_velocities = [
-                            mj_data.qvel[0],
-                            mj_data.qvel[1],
+                            mj_data.joint("left_wheel_joint").qvel[0],
+                            mj_data.joint("right_wheel_joint").qvel[0],
                         ]
                         node.send_output(
                             "wheel_joint_positions",
