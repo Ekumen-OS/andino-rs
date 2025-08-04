@@ -5,7 +5,7 @@
 - Install it with uv:
 
 ```bash
-uv venv -p 3.10 --seed
+uv venv -p 3.11 --seed
 uv pip install -e .
 ```
 
@@ -52,7 +52,7 @@ nodes:
   # Loads andino simulation in MuJoCo. This replaces the andino HAL with a simulated version.
   # If we were to replace this node with dora_andino_hal node, it should be able to run the dataflow.
   - id: dora_andino_mujoco_sim
-    build: pip install -e .
+    build: uv pip install -e .
     path: dora_andino_mujoco_sim
     inputs:
       viewer_tick: dora/timer/millis/17 # ~60 Hz

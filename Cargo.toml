@@ -29,6 +29,6 @@ serialport = { version = "4.7"}
 thiserror = { version = "1.0" }
 tokio = { version = "1.24.2", features = ["rt", "macros"] }
 
-dora-node-api = { version = "0.3.11"}
-dora-cli = { version = "0.3.11"}
-dora-tracing = { version = "0.3.11"}
+dora-node-api = { version = "0.3.12"}
+dora-cli = { version = "0.3.12"}
+dora-tracing = { version = "0.3.12"}

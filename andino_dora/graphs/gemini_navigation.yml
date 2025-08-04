@@ -33,7 +33,7 @@ nodes:
       WHEEL_SEPARATION: 0.137 # [m]
 
   - id: camera
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=opencv-video-capture&subdirectory=node-hub/opencv-video-capture
+    build: uv pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=opencv-video-capture&subdirectory=node-hub/opencv-video-capture
     path: opencv-video-capture
     inputs:
       tick: dora/timer/millis/100
@@ -45,7 +45,7 @@ nodes:
       IMAGE_HEIGHT: 480
 
   - id: dora_gemini_diff_drive_navigation
-    build: pip install -e ../../dora_node_hub/dora_gemini_diff_drive_navigation
+    build: uv pip install -e ../../dora_node_hub/dora_gemini_diff_drive_navigation
     path: dora_gemini_diff_drive_navigation
     inputs:
       cmd_vel_tick: dora/timer/millis/100 # 10 Hz
@@ -70,8 +70,8 @@ nodes:
       - submitted_string # [string]
 
   - id: rerun-viz
-    build: pip install git+https://github.com/dora-rs/dora.git@v0.3.11#egg=dora-rerun&subdirectory=node-hub/dora-rerun
-    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.11 dora-rerun
+    build: uv pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=dora-rerun&subdirectory=node-hub/dora-rerun
+    # This should be equivalent to: cargo install --git https://github.com/dora-rs/dora --tag v0.3.12 dora-rerun
     path: dora-rerun
     inputs:
       image: camera/image

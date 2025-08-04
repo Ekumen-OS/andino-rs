@@ -28,7 +28,7 @@ pub fn main() -> eyre::Result<()> {
     let (mut node, mut events) = DoraNode::init_from_env()?;
     while let Some(event) = events.recv() {
         match event {
-            Event::Stop => {
+            Event::Stop(_) => {
                 println!("Received stop event");
                 break;
             }

@@ -40,7 +40,7 @@ pub fn main() -> eyre::Result<()> {
     let mut last_timestamp = Option::None;
     while let Some(event) = events.recv() {
         match event {
-            Event::Stop => {
+            Event::Stop(_) => {
                 println!("Received stop event");
                 break;
             }
