@@ -11,19 +11,19 @@ fn normalize_angle(angle: f64) -> f64 {
 /// Odometry for a diff drive mobile robot.
 pub struct DiffDriveOdometry {
     /// The distance between the wheels.
-    wheel_separation: f64,              // [m]
+    wheel_separation: f64, // [m]
     /// The radius of the wheels.
-    wheel_radius: f64,                  // [m]
+    wheel_radius: f64, // [m]
 
     /// Current pose:
     current_pose: Pose2D,
 
     /// Current velocity:
-    linear: f64,                        // [m/s]
-    angular: f64,                       // [rad/s]
+    linear: f64, // [m/s]
+    angular: f64, // [rad/s]
 
     /// Previous data for odometry calculations.
-    previous_time: f64,                 // [s]
+    previous_time: f64, // [s]
     previous_left_wheel_position: f64,  // [rad]
     previous_right_wheel_position: f64, // [rad]
 }
@@ -31,8 +31,8 @@ pub struct DiffDriveOdometry {
 impl DiffDriveOdometry {
     pub fn new(wheel_separation: f64, wheel_radius: f64) -> Self {
         DiffDriveOdometry {
-            wheel_separation: wheel_separation,
-            wheel_radius: wheel_radius,
+            wheel_separation,
+            wheel_radius,
             current_pose: Pose2D {
                 x: 0.0,
                 y: 0.0,
@@ -56,7 +56,7 @@ impl DiffDriveOdometry {
         }
 
         let dt = timestamp - self.previous_time;
-        if dt < 0.01{
+        if dt < 0.01 {
             return; // Ignore updates that are too close together
         }
 
@@ -64,7 +64,7 @@ impl DiffDriveOdometry {
         let left_wheel_diff = left_wheel_position - self.previous_left_wheel_position;
         let right_wheel_diff = right_wheel_position - self.previous_right_wheel_position;
 
-        // Obtain velocity. 
+        // Obtain velocity.
         // Note that there is no division by dt as it would be canceled out by the multiplication by dt when updating the pose.
         self.linear = (left_wheel_diff + right_wheel_diff) * self.wheel_radius / 2.0;
         self.angular = (right_wheel_diff - left_wheel_diff) * self.wheel_radius / self.wheel_separation;
@@ -81,32 +81,39 @@ impl DiffDriveOdometry {
         self.previous_time = timestamp;
         self.previous_left_wheel_position = left_wheel_position;
         self.previous_right_wheel_position = right_wheel_position;
-
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::thread::sleep;
-
     use super::*;
+    use std::f64::consts::PI;
+
+    fn assert_f64_eq(a: f64, b: f64, epsilon: f64) {
+        assert!(
+            (a - b).abs() < epsilon,
+            "Values {} and {} are not within epsilon {}",
+            a,
+            b,
+            epsilon
+        );
+    }
 
     #[test]
     fn test_update_wheels_position_linear() {
         let wheel_separation = 1.0; // [m]
         let wheel_radius = 0.5; // [m]
         let mut odometry = DiffDriveOdometry::new(wheel_separation, wheel_radius);
+        odometry.update(0.0, 0.0, 0.0);
         // Test with both wheels moving forward
-        sleep(Duration::from_millis(1000));
-
-        let wheels_new_position = 6.28; // [rad]
-        odometry.update(wheels_new_position, wheels_new_position);
+        let wheels_new_position = 2.0 * PI; // [rad]
+        odometry.update(wheels_new_position, wheels_new_position, 1.0);
 
         assert_eq!(odometry.current_pose.x, wheel_radius * wheels_new_position);
         assert_eq!(odometry.current_pose.y, 0.0);
         assert_eq!(odometry.current_pose.heading, 0.0);
 
-        assert_eq!(odometry.linear, 3.14);
+        assert_eq!(odometry.linear, PI);
         assert_eq!(odometry.angular, 0.0);
     }
 
@@ -115,19 +122,17 @@ mod tests {
         let wheel_separation = 1.0; // [m]
         let wheel_radius = 0.5; // [m]
         let mut odometry = DiffDriveOdometry::new(wheel_separation, wheel_radius);
+        odometry.update(0.0, 0.0, 0.0);
         // Test with both wheels moving forward
-        sleep(Duration::from_millis(1000));
-
-        let left_wheel_new_position = -3.14; // [rad]
-        let right_wheel_new_position = 3.14; // [rad]
-        odometry.update(left_wheel_new_position, right_wheel_new_position);
+        let left_wheel_new_position = -PI; // [rad]
+        let right_wheel_new_position = PI; // [rad]
+        odometry.update(left_wheel_new_position, right_wheel_new_position, 1.0);
 
         assert_eq!(odometry.current_pose.x, 0.0);
         assert_eq!(odometry.current_pose.y, 0.0);
-        assert_eq!(odometry.current_pose.heading, 3.14);
+        assert_f64_eq(odometry.current_pose.heading, PI, 1e-10);
 
         assert_eq!(odometry.linear, 0.0);
-        assert_eq!(odometry.angular, 3.14);
+        assert_f64_eq(odometry.angular, PI, 1e-10);
     }
-
 }

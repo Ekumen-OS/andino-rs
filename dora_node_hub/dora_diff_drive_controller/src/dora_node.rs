@@ -19,8 +19,10 @@ pub fn main() -> eyre::Result<()> {
         wheel_radius, wheel_separation
     );
 
-    let diff_drive_controller: crate::controller::DiffDriveController = crate::controller::DiffDriveController::new(wheel_separation, wheel_radius);
-    let mut diff_drive_odometry: crate::odometry::DiffDriveOdometry = crate::odometry::DiffDriveOdometry::new(wheel_separation, wheel_radius);
+    let diff_drive_controller: crate::controller::DiffDriveController =
+        crate::controller::DiffDriveController::new(wheel_separation, wheel_radius);
+    let mut diff_drive_odometry: crate::odometry::DiffDriveOdometry =
+        crate::odometry::DiffDriveOdometry::new(wheel_separation, wheel_radius);
 
     while let Some(event) = events.recv() {
         match event {
