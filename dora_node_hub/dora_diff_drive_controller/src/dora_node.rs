@@ -19,7 +19,8 @@ pub fn main() -> eyre::Result<()> {
         wheel_radius, wheel_separation
     );
 
-    let diff_drive_controller = crate::controller::DiffDriveController::new(wheel_separation, wheel_radius);
+    let diff_drive_controller: crate::controller::DiffDriveController = crate::controller::DiffDriveController::new(wheel_separation, wheel_radius);
+    let mut diff_drive_odometry: crate::odometry::DiffDriveOdometry = crate::odometry::DiffDriveOdometry::new(wheel_separation, wheel_radius);
 
     while let Some(event) = events.recv() {
         match event {
@@ -50,6 +51,26 @@ pub fn main() -> eyre::Result<()> {
                         // Send float array to joints_speed_cmd output
                         let speed_array = Float64Array::from(vec![left_wheel_speed, right_wheel_speed]);
                         node.send_output(output_joints_speed.clone(), metadata.parameters, speed_array)?;
+                    }
+                    "wheel_joint_positions" => {
+                        // Receives wheel joint positions
+                        let values = if let Some(float_array) = data.as_any().downcast_ref::<Float64Array>() {
+                            float_array
+                        } else {
+                            eprintln!("wheel_joint_positions: Not a Float64Array!");
+                            continue;
+                        };
+                        if values.len() != 2 {
+                            eprintln!(
+                                "wheel_joint_positions: Not a Float64Array with 2 elements. It expects a Float64Array with 2 elements: [left_wheel_position, right_wheel_position]"
+                            );
+                            continue;
+                        }
+                        diff_drive_odometry.update(
+                            values.value(0), // left wheel position
+                            values.value(1), // right wheel position
+                        );
+                        // Process wheel joint positions if needed
                     }
                     _ => {
                         println!("Unexpected input id: {:?}", id);
