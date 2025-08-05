@@ -7,8 +7,8 @@ nodes:
       tick: dora/timer/millis/100
       joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
     outputs:
-      - wheel_joint_positions # [left, right]
-      - wheel_joint_velocities # [left, right]
+      - wheel_joint_positions # [left, right, timestamp ]
+      - wheel_joint_velocities # [left, right, timestamp ]
     env:
       # Serial port name.
       SERIAL_DEVICE: /dev/ttyUSB0

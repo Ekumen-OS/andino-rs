@@ -60,15 +60,16 @@ pub fn main() -> eyre::Result<()> {
                             eprintln!("wheel_joint_positions: Not a Float64Array!");
                             continue;
                         };
-                        if values.len() != 2 {
+                        if values.len() != 3 {
                             eprintln!(
-                                "wheel_joint_positions: Not a Float64Array with 2 elements. It expects a Float64Array with 2 elements: [left_wheel_position, right_wheel_position]"
+                                "wheel_joint_positions: Not a Float64Array with 3 elements. It expects a Float64Array with 3 elements: [left_wheel_position, right_wheel_position, timestamp]"
                             );
                             continue;
                         }
                         diff_drive_odometry.update(
                             values.value(0), // left wheel position
                             values.value(1), // right wheel position
+                            values.value(2), // timestamp
                         );
                         // Process wheel joint positions if needed
                     }
