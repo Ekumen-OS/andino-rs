@@ -34,17 +34,17 @@
                 <geom type="mesh" rgba="0 0 1 1" mesh="chassis_top"/>
             </body><!-- chassis_top -->
 
-            <body name="right_wheel" pos="0.0185 -0.0675 -0.017">
+            <body name="right_wheel" pos="0.0185 -0.0685 -0.017">
                 <site name="right_wheel"/>
                 <joint name="right_wheel_joint" type="hinge" axis="0 1 0" damping="0.001"  />
                 <geom class="visual" quat="0 0 -0.707107 -0.707107" type="mesh"  mesh="wheel"/>
-                <geom quat="1 1 0 0" type="cylinder" mass="0.03" size="0.03 0.010" />
+                <geom quat="1 1 0 0" type="cylinder" mass="0.03" size="0.0315 0.010" />
             </body><!-- right_wheel -->
 
-            <body name="left_wheel" pos="0.0185 0.0675 -0.017">
+            <body name="left_wheel" pos="0.0185 0.0685 -0.017">
                 <joint name="left_wheel_joint" type="hinge" axis="0 1 0" damping="0.001" />
                 <geom class="visual" quat="0.707107 0.707107 0 0" type="mesh" mesh="wheel"/>
-                <geom quat="1 1 0 0" type="cylinder" mass="0.03" size="0.03 0.010" />
+                <geom quat="1 1 0 0" type="cylinder" mass="0.03" size="0.0315 0.010" />
             </body><!-- left_wheel -->
 
             <body name="caster_base" pos="-0.076 0 -0.0155" >

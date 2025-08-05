@@ -12,8 +12,8 @@ nodes:
       camera_tick: dora/timer/millis/100 # 10 Hz
       joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
     outputs:
-      - wheel_joint_positions # [left, right]
-      - wheel_joint_velocities # [left, right]
+      - wheel_joint_positions # [left, right, timestamp]
+      - wheel_joint_velocities # [left, right, timestamp]
       - camera_image # Encoding: bgr8
     env:
       TIMESTEP: 0.001 # [s]

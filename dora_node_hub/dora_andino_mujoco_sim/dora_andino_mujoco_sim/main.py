@@ -74,7 +74,6 @@ def main() -> None:
 
                         # Advance the simulation
                         mujoco.mj_step(mj_model, mj_data)
-
                         # Send position and velocity data or any other form of feedback from MuJoCo.
                         # Replicating same behavior as the dora_andino_hal we outputs:
                         # - wheel_joint_positions
@@ -82,11 +81,13 @@ def main() -> None:
                         wheel_joint_positions = [
                             mj_data.joint("left_wheel_joint").qpos[0],
                             mj_data.joint("right_wheel_joint").qpos[0],
+                            mj_data.time,
                         ]
 
                         wheel_joint_velocities = [
                             mj_data.joint("left_wheel_joint").qvel[0],
                             mj_data.joint("right_wheel_joint").qvel[0],
+                            mj_data.time,
                         ]
                         node.send_output(
                             "wheel_joint_positions",

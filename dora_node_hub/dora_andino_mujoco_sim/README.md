@@ -59,8 +59,8 @@ nodes:
       model_tick: dora/timer/millis/1 # ~1000Hz
       joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
     outputs:
-      - wheel_joint_positions # [left, right]
-      - wheel_joint_velocities # [left, right]
+      - wheel_joint_positions # [left, right, timestamp]
+      - wheel_joint_velocities # [left, right, timestamp]
     env:
       TIMESTEP: 0.001 # [s]
 ```
