@@ -10,17 +10,17 @@ fn normalize_angle(angle: f64) -> f64 {
 }
 /// Odometry for a diff drive mobile robot.
 pub struct DiffDriveOdometry {
+    /// Current pose:
+    pub current_pose: Pose2D,
+
+    /// Current velocity:
+    pub linear: f64, // [m/s]
+    pub angular: f64, // [rad/s]
+
     /// The distance between the wheels.
     wheel_separation: f64, // [m]
     /// The radius of the wheels.
     wheel_radius: f64, // [m]
-
-    /// Current pose:
-    current_pose: Pose2D,
-
-    /// Current velocity:
-    linear: f64, // [m/s]
-    angular: f64, // [rad/s]
 
     /// Previous data for odometry calculations.
     previous_time: f64, // [s]

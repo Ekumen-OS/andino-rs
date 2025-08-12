@@ -26,9 +26,9 @@ nodes:
     inputs:
       cmd_vel: dora_teleop_keyboard/cmd_vel
       wheel_joint_positions: dora_andino_mujoco_sim/wheel_joint_positions
-      # wheel_joint_velocities: dora_andino_mujoco_sim/wheel_joint_velocities
     outputs:
       - joints_speed_cmd # [left, right]
+      - odom # [x, y, theta, linear_vel, angular_vel, timestamp]
     env:
       WHEEL_RADIUS: 0.0315 # [m]
       WHEEL_SEPARATION: 0.137 # [m]

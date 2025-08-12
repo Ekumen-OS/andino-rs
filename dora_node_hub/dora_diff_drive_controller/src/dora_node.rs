@@ -2,6 +2,7 @@ use dora_node_api::{DoraNode, Event, arrow::array::Float64Array, dora_core::conf
 
 pub fn main() -> eyre::Result<()> {
     let output_joints_speed = DataId::from("joints_speed_cmd".to_owned());
+    let output_odom = DataId::from("odom".to_owned());
 
     let (mut node, mut events) = DoraNode::init_from_env()?;
 
@@ -68,11 +69,22 @@ pub fn main() -> eyre::Result<()> {
                             );
                             continue;
                         }
+                        let timestamp = values.value(2);
                         diff_drive_odometry.update(
                             values.value(0), // left wheel position
                             values.value(1), // right wheel position
-                            values.value(2), // timestamp
+                            timestamp,       // timestamp
                         );
+
+                        let odom_array = Float64Array::from(vec![
+                            diff_drive_odometry.current_pose.x,
+                            diff_drive_odometry.current_pose.y,
+                            diff_drive_odometry.current_pose.heading,
+                            diff_drive_odometry.linear,
+                            diff_drive_odometry.angular,
+                            timestamp,
+                        ]);
+                        node.send_output(output_odom.clone(), metadata.parameters, odom_array)?;
                         // Process wheel joint positions if needed
                     }
                     _ => {
