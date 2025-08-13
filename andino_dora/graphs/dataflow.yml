@@ -36,7 +36,10 @@ nodes:
 
   # Node that reads the keyboard input and outputs the character pressed.
   - id: dora_keyboard
-    build: uv pip install git+https://github.com/dora-rs/dora.git@v0.3.12#egg=dora-keyboard&subdirectory=node-hub/dora-keyboard
+    # TODO(#55): Note we are here not using `uv`. It seems there is an issue with `uv` for the Raspberry Pi's architecture
+    # causing an illegal instruction error.
+    # Once this is fixed, we can switch back to using `uv` for consistency.
+    build: pip install dora-keyboard
     path: dora-keyboard
     outputs:
       - char
@@ -54,11 +57,10 @@ nodes:
       DEFAULT_ANGULAR_SPEED: 1.0 # [rad/s]
 
   # - id: dora-record
-  #   custom:
-  #     build: cargo install --git https://github.com/dora-rs/dora --tag v0.3.12 dora-record
-  #     source: dora-record
-  #     inputs:
-  #       wheel_joint_positions: dora_andino_hal/wheel_joint_positions
-  #       wheel_joint_velocities: dora_andino_hal/wheel_joint_velocities
-  #       joints_speed_cmd: diff_drive_controller/joints_speed_cmd
-        # cmd_vel: gamepad/cmd_vel
+  #   build: cargo install --git https://github.com/dora-rs/dora --tag v0.3.12 dora-record
+  #   path: dora-record
+  #   inputs:
+  #     wheel_joint_positions: dora_andino_hal/wheel_joint_positions
+  #     wheel_joint_velocities: dora_andino_hal/wheel_joint_velocities
+  #     joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
+  #     odom: dora_diff_drive_controller/odom
