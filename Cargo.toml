@@ -17,6 +17,7 @@ repository = "https://github.com/ekumenlabs/andino-rs"
 authors = ["Franco Cipollone <franco.c@ekumenlabs.com>"]
 
 [workspace.dependencies]
+approx = { version = "0.5" }
 clap = { version = "4.5" }
 crossterm = { version = "0.29" }
 env_logger = { version = "0.10" }

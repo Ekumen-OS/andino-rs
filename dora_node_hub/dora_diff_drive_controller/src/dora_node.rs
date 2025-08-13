@@ -85,7 +85,6 @@ pub fn main() -> eyre::Result<()> {
                             timestamp,
                         ]);
                         node.send_output(output_odom.clone(), metadata.parameters, odom_array)?;
-                        // Process wheel joint positions if needed
                     }
                     _ => {
                         println!("Unexpected input id: {:?}", id);

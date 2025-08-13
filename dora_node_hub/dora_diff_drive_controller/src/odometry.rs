@@ -1,6 +1,10 @@
 use crate::pose_2d::Pose2D;
 
 fn normalize_angle(angle: f64) -> f64 {
+    if angle >= -std::f64::consts::PI && angle <= std::f64::consts::PI {
+        return angle;
+    }
+
     let result = (angle + std::f64::consts::PI) % (2.0 * std::f64::consts::PI);
     if result <= 0.0 {
         result + std::f64::consts::PI
@@ -29,6 +33,12 @@ pub struct DiffDriveOdometry {
 }
 
 impl DiffDriveOdometry {
+    /// Creates an instance of `DiffDriveOdometry`.
+    ///
+    /// # Arguments
+    ///
+    /// * `wheel_separation` - The distance between the wheels in meters.
+    /// * `wheel_radius` - The radius of the wheels in meters.
     pub fn new(wheel_separation: f64, wheel_radius: f64) -> Self {
         DiffDriveOdometry {
             wheel_separation,
@@ -46,6 +56,13 @@ impl DiffDriveOdometry {
         }
     }
 
+    /// Updates the odometry based on the current wheel positions and timestamp.
+    ///
+    /// # Arguments
+    ///
+    /// * `left_wheel_position` - The current position of the left wheel in radians.
+    /// * `right_wheel_position` - The current position of the right wheel in radians.
+    /// * `timestamp` - The current timestamp in seconds.
     pub fn update(&mut self, left_wheel_position: f64, right_wheel_position: f64, timestamp: f64) {
         if self.previous_time == -1.0 {
             // First update, just set the previous data
@@ -86,18 +103,10 @@ impl DiffDriveOdometry {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use std::f64::consts::PI;
 
-    fn assert_f64_eq(a: f64, b: f64, epsilon: f64) {
-        assert!(
-            (a - b).abs() < epsilon,
-            "Values {} and {} are not within epsilon {}",
-            a,
-            b,
-            epsilon
-        );
-    }
+    use super::*;
+    use approx::assert_abs_diff_eq;
+    use std::f64::consts::PI;
 
     #[test]
     fn test_update_wheels_position_linear() {
@@ -130,9 +139,24 @@ mod tests {
 
         assert_eq!(odometry.current_pose.x, 0.0);
         assert_eq!(odometry.current_pose.y, 0.0);
-        assert_f64_eq(odometry.current_pose.heading, PI, 1e-10);
+        assert_abs_diff_eq!(odometry.current_pose.heading, PI, epsilon = f64::EPSILON);
 
         assert_eq!(odometry.linear, 0.0);
-        assert_f64_eq(odometry.angular, PI, 1e-10);
+        assert_abs_diff_eq!(odometry.angular, PI, epsilon = f64::EPSILON);
+    }
+
+    #[test]
+    fn test_normalize_angle() {
+        assert_abs_diff_eq!(normalize_angle(0.0), 0.0, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(PI), PI, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(-PI), -PI, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(2.0 * PI), 0.0, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(3.0 * PI), PI, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(-2.0 * PI), 0.0, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(-3.0 * PI), PI, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(PI / 2.0), PI / 2.0, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(-PI / 2.0), -PI / 2.0, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(PI + 0.1), -PI + 0.1, epsilon = 1e-8);
+        assert_abs_diff_eq!(normalize_angle(-PI - 0.1), PI - 0.1, epsilon = 1e-8);
     }
 }

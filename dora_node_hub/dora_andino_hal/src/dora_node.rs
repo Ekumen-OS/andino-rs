@@ -60,6 +60,7 @@ pub fn main() -> eyre::Result<()> {
                         let wheel_joint_positions_data = Float64Array::from(vec![
                             andino_hal_state.left_wheel_state.position,
                             andino_hal_state.right_wheel_state.position,
+                            metadata.timestamp().get_time().to_duration().as_secs_f64(),
                         ]);
                         node.send_output(
                             output_wheel_joint_positions.clone(),
@@ -70,6 +71,7 @@ pub fn main() -> eyre::Result<()> {
                         let wheel_joint_velocities_data = Float64Array::from(vec![
                             andino_hal_state.left_wheel_state.velocity,
                             andino_hal_state.right_wheel_state.velocity,
+                            metadata.timestamp().get_time().to_duration().as_secs_f64(),
                         ]);
                         node.send_output(
                             output_wheel_joint_velocities.clone(),
