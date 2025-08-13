@@ -1,7 +1,7 @@
 use crate::pose_2d::Pose2D;
 
 fn normalize_angle(angle: f64) -> f64 {
-    if angle >= -std::f64::consts::PI && angle <= std::f64::consts::PI {
+    if (-std::f64::consts::PI..=std::f64::consts::PI).contains(&angle) {
         return angle;
     }
 
