@@ -12,8 +12,8 @@ nodes:
       camera_tick: dora/timer/millis/100 # 10 Hz
       joints_speed_cmd: dora_diff_drive_controller/joints_speed_cmd
     outputs:
-      - wheel_joint_positions # [left, right]
-      - wheel_joint_velocities # [left, right]
+      - wheel_joint_positions # [left, right, timestamp]
+      - wheel_joint_velocities # [left, right, timestamp]
       - camera_image # Encoding: bgr8
     env:
       TIMESTEP: 0.001 # [s]
@@ -24,9 +24,11 @@ nodes:
     build: cargo build -p dora_diff_drive_controller
     path: ../../target/debug/dora_diff_drive_controller
     inputs:
-      cmd_vel: dora_gemini_diff_drive_navigation/cmd_vel
+      cmd_vel: dora_teleop_keyboard/cmd_vel
+      wheel_joint_positions: dora_andino_mujoco_sim/wheel_joint_positions
     outputs:
       - joints_speed_cmd # [left, right]
+      - odom # [x, y, theta, linear_vel, angular_vel, timestamp]
     env:
       WHEEL_RADIUS: 0.0315 # [m]
       WHEEL_SEPARATION: 0.137 # [m]

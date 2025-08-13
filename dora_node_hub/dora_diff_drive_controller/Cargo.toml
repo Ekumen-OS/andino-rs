@@ -11,3 +11,4 @@ authors = { workspace = true }
 
 eyre = { workspace = true }
 dora-node-api = { workspace = true}
+approx = { workspace = true}
